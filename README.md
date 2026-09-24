@@ -11,3 +11,7 @@ Mobile repair release. Desktop styling remains unchanged.
 - Made footer compact and social icons display cleanly on phones.
 
 Open `index.html` with Live Server or deploy the folder to GitHub Pages.
+
+
+## v7 mobile update
+The mobile hamburger navigation has been removed. Desktop navigation is unchanged.
