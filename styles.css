@@ -541,3 +541,380 @@ button, input { font: inherit; }
   .role-card { min-height: auto; }
   .site-footer::after { width: 135px; height: 135px; right: -70px; bottom: -80px; }
 }
+
+/* v6 MOBILE-ONLY repair — desktop styles above are intentionally untouched */
+@media (max-width: 640px) {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: calc(100% - 32px);
+    max-width: none;
+  }
+
+  /* Header */
+  .header-inner {
+    min-height: 74px;
+    gap: 12px;
+  }
+
+  .brand {
+    gap: 9px;
+    max-width: calc(100% - 62px);
+  }
+
+  .brand-mark {
+    width: 46px;
+    height: 56px;
+    flex: 0 0 46px;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 7px;
+  }
+
+  .brand-copy {
+    font-size: 14px;
+    line-height: .9;
+    white-space: nowrap;
+  }
+
+  .menu-button {
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    padding: 7px;
+  }
+
+  .mobile-nav,
+  .mobile-nav.open {
+    width: 100%;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 28px 0 24px;
+  }
+
+  .hero-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-height: 0;
+  }
+
+  .hero-copy {
+    width: 100%;
+    max-width: none;
+  }
+
+  .eyebrow {
+    margin-bottom: 12px;
+    font-size: 10.5px;
+    line-height: 1.3;
+    letter-spacing: .18em;
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 11.2vw, 48px);
+    line-height: 1.02;
+    letter-spacing: -.045em;
+  }
+
+  .hero h1 span::after {
+    bottom: -10px;
+    width: 82px;
+    height: 4px;
+  }
+
+  .hero-text {
+    margin-top: 25px;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .button {
+    width: 100%;
+    min-height: 54px;
+    padding-inline: 20px;
+    border-radius: 13px;
+  }
+
+  .hero-visual {
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0 4px 6px;
+  }
+
+  .bubble-frame {
+    width: min(100%, 390px);
+    max-width: 390px;
+    height: auto;
+    aspect-ratio: 952 / 1112;
+    margin-inline: auto;
+    border-width: 5px;
+    border-radius: 31% 69% 40% 60% / 28% 34% 66% 72%;
+  }
+
+  .bubble-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    background: #f7fbff;
+  }
+
+  .dot-orange {
+    width: 30px;
+    height: 30px;
+    left: 8px;
+    top: 22px;
+  }
+
+  .dot-blue {
+    width: 56px;
+    height: 56px;
+    left: -10px;
+    bottom: 2px;
+  }
+
+  .dot-yellow {
+    width: 110px;
+    height: 110px;
+    right: -48px;
+    top: -30px;
+  }
+
+  .hero-decoration-left {
+    width: 150px;
+    height: 150px;
+    left: -105px;
+    bottom: -45px;
+  }
+
+  .hero-decoration-right {
+    width: 130px;
+    height: 130px;
+    right: -88px;
+    top: -25px;
+  }
+
+  /* Role cards */
+  .roles {
+    padding: 14px 0 28px;
+  }
+
+  .role-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .role-card {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding: 20px;
+    gap: 15px;
+    align-items: flex-start;
+    border-radius: 18px;
+  }
+
+  .role-icon {
+    flex: 0 0 62px;
+    width: 62px;
+    height: 62px;
+  }
+
+  .role-icon svg {
+    width: 34px;
+    height: 34px;
+  }
+
+  .role-content {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .role-card h3 {
+    font-size: 20px;
+    line-height: 1.2;
+    margin-bottom: 7px;
+  }
+
+  .role-card p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .role-login {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 15px;
+    justify-content: center;
+    padding: 0 14px;
+  }
+
+  .member-notice {
+    margin-top: 16px;
+    padding: 15px 16px;
+    gap: 13px;
+    align-items: flex-start;
+    border-radius: 15px;
+  }
+
+  .notice-icon {
+    flex-basis: 32px;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+
+  .member-notice strong,
+  .member-notice p {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  /* Footer — compact mobile layout */
+  .footer-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 30px 0 22px;
+  }
+
+  .footer-brand {
+    min-width: 0;
+  }
+
+  .footer-logo {
+    max-width: 100%;
+  }
+
+  .footer-logo .brand-mark {
+    width: 48px;
+    height: 58px;
+    flex-basis: 48px;
+  }
+
+  .footer-logo .brand-copy {
+    font-size: 14px;
+  }
+
+  .footer-brand p {
+    max-width: 100%;
+    margin: 14px 0 0;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .site-footer h3 {
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    gap: 8px 20px;
+    font-size: 14px;
+  }
+
+  .footer-links h3 {
+    grid-column: 1 / -1;
+    margin: 0 0 2px;
+  }
+
+  .footer-contact {
+    gap: 7px;
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+
+  .footer-contact a,
+  .footer-contact span {
+    overflow-wrap: anywhere;
+  }
+
+  .footer-social {
+    gap: 8px;
+  }
+
+  .social-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow: visible;
+  }
+
+  .social-row a,
+  .social-row img {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+  }
+
+  .footer-bottom {
+    min-height: 0;
+    padding: 16px 0 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .site-footer::after {
+    width: 110px;
+    height: 110px;
+    right: -62px;
+    bottom: -70px;
+  }
+
+  /* Keep other pages usable on phones without affecting desktop */
+  .page-main,
+  .portal-main {
+    overflow-x: hidden;
+  }
+
+  .page-hero {
+    padding-top: 42px;
+  }
+
+  .page-hero h1,
+  .portal-heading h1 {
+    font-size: clamp(36px, 10vw, 46px);
+  }
+
+  .contact-grid,
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .login-main {
+    padding: 24px 16px 36px;
+  }
+
+  .login-shell {
+    width: 100%;
+    border-radius: 22px;
+  }
+
+  .login-message,
+  .login-panel {
+    padding: 26px 20px;
+  }
+
+  .login-message h1 {
+    font-size: 38px;
+  }
+}

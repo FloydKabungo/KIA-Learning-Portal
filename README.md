@@ -1,24 +1,13 @@
-# KIA Learning Portal Frontend
+# KIA Learning Portal v6
 
-Responsive frontend prototype for Kids Innovate Africa.
+Mobile repair release. Desktop styling remains unchanged.
 
-## Pages
-- `index.html` – portal landing page
-- `contact.html` – KIA contact page
-- `login.html` – shared login page with role-aware demo routing
-- `student.html` – student portal demo
-- `mompreneur.html` – Mompreneur portal demo
-- `admin.html` – KIA admin portal demo
+## Fixes
+- Corrected GitHub Pages asset-path casing by using `Assets/` consistently.
+- Fixed broken KIA logo, learner image and social icons on case-sensitive hosting.
+- Reworked only the mobile layout for the homepage, cards and footer.
+- Hero image now shows the full uploaded portrait/robot image with `object-fit: contain` on phones.
+- Removed mobile horizontal overflow.
+- Made footer compact and social icons display cleanly on phones.
 
-## Demo login flow
-The role cards on the home page open the shared login page with the intended role selected. Enter any non-empty username/email and password to preview that role's portal. This is frontend-only demo behavior; production authentication should determine the role from the authenticated account, not from the URL or client-side selection.
-
-## Run locally
-Open the folder in VS Code and use Live Server on `index.html`.
-
-## v4 visual update
-- Hero portrait now preserves the original uploaded image aspect ratio so the learner and robotics kit are visible.
-- Colour usage is balanced across KIA blue, yellow and orange.
-- Student, Mompreneur and Admin cards each have their own login button and role-specific login routing.
-
-- Footer uses KIA's supplied social icons and real social media links.
+Open `index.html` with Live Server or deploy the folder to GitHub Pages.
