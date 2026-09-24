@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Kids Innovate Africa Learning Portal for enrolled learners, Mompreneurs and KIA administrators." />
+  <title>KIA Learning Portal</title>
+  <link rel="icon" href="assets/kia-mark.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Kids Innovate Africa Learning Portal home">
+        <img src="assets/kia-mark.png" alt="KIA Africa logo" class="brand-mark" />
+        <div class="brand-copy" aria-hidden="true">
+          <span>KIDS</span>
+          <span>INNOVATE</span>
+          <span>AFRICA</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a class="active" href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+        <a class="nav-login" href="login.html">Login</a>
+      </nav>
+
+      <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+      <a class="active" href="index.html">Home</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-decoration hero-decoration-left" aria-hidden="true"></div>
+      <div class="hero-decoration hero-decoration-right" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">KIA LEARNING PORTAL</p>
+          <h1>Welcome to the<br /><span>KIA Learning Portal</span></h1>
+          <p class="hero-text">Access robotics lessons, manage your club, and continue learning with Kids Innovate Africa.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="login.html">Login to Platform <span aria-hidden="true">→</span></a>
+            <a class="button button-secondary" href="contact.html">Contact KIA</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="bubble-frame">
+            <img src="assets/robotics-student.jpg" alt="KIA learner working with a robotics kit" />
+          </div>
+          <span class="dot dot-orange" aria-hidden="true"></span>
+          <span class="dot dot-blue" aria-hidden="true"></span>
+          <span class="dot dot-yellow" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="roles" aria-labelledby="roles-title">
+      <div class="container">
+        <h2 id="roles-title" class="sr-only">Portal user roles</h2>
+        <div class="role-grid">
+          <article class="role-card student-card">
+            <div class="role-icon role-icon-blue" aria-hidden="true">
+              <svg viewBox="0 0 64 64" role="img"><path d="M6 24 32 12l26 12-26 12L6 24Zm8 8v11c0 4 8 9 18 9s18-5 18-9V32L32 41 14 32Zm39 2v14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="role-content">
+              <h3>Student</h3>
+              <p>Access assigned robotics lessons, continue learning and view your progress.</p>
+              <a class="role-login role-login-blue" href="login.html?role=student">Student Login <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="role-card mom-card">
+            <div class="role-icon role-icon-orange" aria-hidden="true">
+              <svg viewBox="0 0 64 64" role="img"><circle cx="24" cy="22" r="9" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="43" cy="24" r="7" fill="none" stroke="currentColor" stroke-width="4"/><path d="M8 50c1-10 7-15 16-15s15 5 16 15M36 38c9-2 17 4 18 12" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+            </div>
+            <div class="role-content">
+              <h3>Mompreneur</h3>
+              <p>Manage club learners, access training content and manage your class schedule.</p>
+              <a class="role-login role-login-orange" href="login.html?role=mompreneur">Mompreneur Login <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="role-card admin-card">
+            <div class="role-icon role-icon-orange" aria-hidden="true">
+              <svg viewBox="0 0 64 64" role="img"><path d="M32 14 37 9l6 3v7l6 3 6-3 3 6-5 5 1 7 5 4-3 6h-7l-4 5v6h-7l-3-6h-7l-3 6h-7v-6l-5-5H8l-3-6 5-4 1-7-5-5 3-6 6 3 6-3v-7l6-3 5 5Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><circle cx="32" cy="33" r="9" fill="none" stroke="currentColor" stroke-width="4"/></svg>
+            </div>
+            <div class="role-content">
+              <h3>KIA Admin</h3>
+              <p>Manage branches, learners, Mompreneurs, courses and platform reports.</p>
+              <a class="role-login role-login-admin" href="login.html?role=admin">Admin Login <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+        </div>
+
+        <div class="member-notice">
+          <div class="notice-icon" aria-hidden="true">i</div>
+          <div>
+            <strong>This platform is for enrolled KIA members and club facilitators.</strong>
+            <p>Please use your assigned account to access your learning materials and club resources.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand">
+        <a class="brand footer-logo" href="index.html">
+          <img src="assets/kia-mark.png" alt="KIA Africa logo" class="brand-mark" />
+          <div class="brand-copy" aria-hidden="true"><span>KIDS</span><span>INNOVATE</span><span>AFRICA</span></div>
+        </a>
+        <p>Empowering the next generation of African innovators through robotics and technology.</p>
+      </div>
+
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html">Login</a>
+      </div>
+
+      <div class="footer-contact">
+        <h3>Get in Touch</h3>
+        <a href="mailto:info@kidsinnovateafrica.com">info@kidsinnovateafrica.com</a>
+        <a href="tel:+27215229739">021 522 9739</a>
+        <span>Sandown Square Business Park, Cape Town</span>
+      </div>
+
+      <div class="footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-row" aria-label="Social media links">
+          <a href="https://za.linkedin.com/company/kids-innovate-africa" target="_blank" rel="noopener noreferrer" aria-label="Kids Innovate Africa on LinkedIn">
+            <img src="assets/social-linkedin.png" alt="" />
+          </a>
+          <a href="https://wa.me/message/ZYOPFBRTSG5VO1" target="_blank" rel="noopener noreferrer" aria-label="Contact Kids Innovate Africa on WhatsApp">
+            <img src="assets/social-whatsapp.png" alt="" />
+          </a>
+          <a href="https://www.instagram.com/kids_innovate_africa/" target="_blank" rel="noopener noreferrer" aria-label="Kids Innovate Africa on Instagram">
+            <img src="assets/social-instagram.png" alt="" />
+          </a>
+          <a href="https://www.facebook.com/people/Kids-Innovate-Africa-kia/100064261230649/#" target="_blank" rel="noopener noreferrer" aria-label="Kids Innovate Africa on Facebook">
+            <img src="assets/social-facebook.png" alt="" />
+          </a>
+          <a href="https://youtube.com/@kids-innovate-africa?si=BDtH3zlb8Wngm-6X" target="_blank" rel="noopener noreferrer" aria-label="Kids Innovate Africa on YouTube">
+            <img src="assets/social-youtube.png" alt="" />
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 Kids Innovate Africa. All rights reserved.</span>
+      <span>Learning Portal</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

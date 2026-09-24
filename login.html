@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | KIA Learning Portal</title>
+  <link rel="icon" href="assets/kia-mark.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="login-body">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="KIA Learning Portal home">
+        <img src="assets/kia-mark.png" alt="KIA Africa logo" class="brand-mark" />
+        <div class="brand-copy" aria-hidden="true"><span>KIDS</span><span>INNOVATE</span><span>AFRICA</span></div>
+      </a>
+      <nav class="desktop-nav" aria-label="Primary navigation"><a href="index.html">Home</a><a href="contact.html">Contact</a><a class="nav-login active" href="login.html">Login</a></nav>
+      <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span></button>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation"><a href="index.html">Home</a><a href="contact.html">Contact</a><a class="active" href="login.html">Login</a></nav>
+  </header>
+
+  <main class="login-main">
+    <div class="login-shell">
+      <section class="login-message">
+        <p class="eyebrow">WELCOME BACK</p>
+        <h1>Continue your <span>KIA learning journey.</span></h1>
+        <p>One login gives you the correct portal based on the role assigned to your account.</p>
+        <div class="mini-role-list">
+          <span>Student</span><span>Mompreneur</span><span>KIA Admin</span>
+        </div>
+      </section>
+
+      <section class="login-panel" aria-labelledby="login-title">
+        <h2 id="login-title">Login to your account</h2>
+        <p>Use the username or email and password supplied to you.</p>
+        <div class="login-role-box">
+          <span class="login-role-label">Portal</span>
+          <div class="role-choice" role="group" aria-label="Choose portal">
+            <button type="button" data-role-choice="student">Student</button>
+            <button type="button" data-role-choice="mompreneur">Mompreneur</button>
+            <button type="button" data-role-choice="admin">KIA Admin</button>
+          </div>
+        </div>
+        <form id="login-form" novalidate>
+          <input type="hidden" id="selected-role" name="role" value="student" />
+          <label for="username">Username or email</label>
+          <input id="username" name="username" type="text" autocomplete="username" placeholder="Enter your username" required />
+
+          <label for="password">Password</label>
+          <div class="password-wrap">
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required />
+            <button class="password-toggle" type="button" aria-label="Show password">Show</button>
+          </div>
+
+          <div class="form-row"><label class="checkbox-label"><input type="checkbox" /> <span>Remember me</span></label><a href="contact.html">Need help?</a></div>
+          <button class="button button-primary login-submit" type="submit">Login <span aria-hidden="true">→</span></button>
+          <p id="login-message" class="form-message" aria-live="polite"></p>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer simple-footer"><div class="container footer-bottom"><span>© 2026 Kids Innovate Africa. All rights reserved.</span><a href="contact.html">Contact Support</a></div></footer>
+  <script src="script.js"></script>
+</body>
+</html>
