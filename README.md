@@ -1,17 +1,19 @@
-# KIA Learning Portal v6
+# KIA Learning Portal v8
 
-Mobile repair release. Desktop styling remains unchanged.
+Frontend prototype for Kids Innovate Africa.
 
-## Fixes
-- Corrected GitHub Pages asset-path casing by using `Assets/` consistently.
-- Fixed broken KIA logo, learner image and social icons on case-sensitive hosting.
-- Reworked only the mobile layout for the homepage, cards and footer.
-- Hero image now shows the full uploaded portrait/robot image with `object-fit: contain` on phones.
-- Removed mobile horizontal overflow.
-- Made footer compact and social icons display cleanly on phones.
+## Temporary demo credentials
 
-Open `index.html` with Live Server or deploy the folder to GitHub Pages.
+### Student
+- Username: `student01`
+- Password: `KIAstudent2026!`
 
+### Mompreneur
+- Username: `mompreneur01`
+- Password: `KIAmom2026!`
 
-## v7 mobile update
-The mobile hamburger navigation has been removed. Desktop navigation is unchanged.
+### KIA Admin
+- Username: `admin01`
+- Password: `KIAadmin2026!`
+
+These credentials are only for the frontend prototype. They are stored in JavaScript and are not secure authentication. Production authentication should be moved to the selected backend/authentication service before using real learner accounts.

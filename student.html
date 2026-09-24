@@ -8,30 +8,160 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <title>Student Portal | KIA Learning Portal</title>
+  <title>My Learning | KIA Learning Portal</title>
 </head>
-<body class="portal-body">
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="index.html"><img src="Assets/kia-mark.png" alt="KIA Africa logo" class="brand-mark" /><div class="brand-copy" aria-hidden="true"><span>KIDS</span><span>INNOVATE</span><span>AFRICA</span></div></a>
-      <nav class="desktop-nav"><a href="index.html">Home</a><a href="contact.html">Contact</a><a class="nav-login" href="login.html">Log out</a></nav>
+<body class="student-dashboard-body">
+  <header class="student-topbar">
+    <div class="student-topbar-inner">
+      <a class="student-brand" href="index.html" aria-label="KIA Learning Portal home">
+        <img src="Assets/kia-mark.png" alt="KIA Africa logo" />
+        <span class="student-brand-copy"><strong>KIDS</strong><strong>INNOVATE</strong><strong>AFRICA</strong></span>
+      </a>
+
+      <nav class="student-nav" aria-label="Student navigation">
+        <a class="active" href="student.html">
+          <span class="nav-icon">⌂</span><span>Home</span>
+        </a>
+        <a href="#my-course">
+          <span class="nav-icon">▣</span><span>My Learning</span>
+        </a>
+        <a href="#schedule">
+          <span class="nav-icon">▦</span><span>Schedule</span>
+        </a>
+      </nav>
+
+      <div class="student-user-area">
+        <button class="student-notification" type="button" aria-label="Notifications">🔔<span></span></button>
+        <div class="student-avatar">S</div>
+        <div class="student-user-copy"><strong>Sean</strong><span>Student</span></div>
+        <a class="student-logout" href="login.html">Log out</a>
+      </div>
     </div>
   </header>
-  <main class="portal-main">
-    <div class="container">
-      <section class="portal-heading">
-        <p class="eyebrow">MY LEARNING</p>
-        <h1>Student Portal</h1>
-        <p>Your assigned robotics learning space. Continue lessons, check progress and keep up with your club schedule.</p>
+
+  <main class="student-dashboard-main">
+    <section class="student-welcome">
+      <div class="student-welcome-copy">
+        <p class="student-kicker">WELCOME BACK, SEAN</p>
+        <h1>Keep Learning,<br /><span>Keep Building!</span></h1>
+        <p class="student-welcome-text">Continue your Robotics journey, complete your lessons and grow your skills with Kids Innovate Africa.</p>
+        <div class="club-chip"><span>●</span> Your Club: <strong>Parklands Club</strong></div>
+      </div>
+      <div class="student-welcome-image">
+        <img src="Assets/robotics-student.jpg" alt="KIA learner working with a robotics kit" />
+      </div>
+      <div class="student-welcome-note">STEM<br />CREATIVITY<br />INNOVATION<br /><span>for a brighter future</span></div>
+    </section>
+
+    <div class="student-dashboard-wrap">
+      <section class="student-overview-grid">
+        <article class="student-panel overview-panel">
+          <div class="panel-heading">
+            <div><h2>My Learning Overview</h2><p>Your course, progress and upcoming sessions at a glance.</p></div>
+          </div>
+          <div class="overview-stats">
+            <div class="stat-box stat-blue"><span class="stat-icon">▣</span><strong>1</strong><span>Assigned Course</span><small>Robotics &amp; Coding</small></div>
+            <div class="stat-box stat-green"><span class="stat-icon">✓</span><strong>12</strong><span>Completed Lessons</span><small>Keep going!</small></div>
+            <div class="stat-box stat-orange"><span class="stat-icon">▶</span><strong>5</strong><span>Lessons in Progress</span><small>Continue learning</small></div>
+            <div class="stat-box stat-purple"><span class="stat-icon">▦</span><strong>3</strong><span>Upcoming Sessions</span><small>View schedule</small></div>
+          </div>
+        </article>
+
+        <article class="student-panel progress-panel">
+          <div class="panel-heading compact"><h2>Overall Progress</h2></div>
+          <div class="overall-progress-number">38%</div>
+          <div class="progress-track"><span style="width:38%"></span></div>
+          <p>12 of 32 lessons completed</p>
+        </article>
+
+        <article class="student-panel continue-panel">
+          <div class="panel-heading compact"><h2>Continue Learning</h2><a href="#current-lesson">View Course →</a></div>
+          <div class="continue-content">
+            <img src="Assets/robotics-student.jpg" alt="Robotics lesson preview" />
+            <div class="continue-copy">
+              <h3>Robotics &amp; Coding</h3>
+              <p>Module 2: Sensors and Movement</p>
+              <small>Lesson 3 of 8 • 18 min</small>
+              <div class="mini-progress"><span style="width:38%"></span></div>
+              <a class="student-primary-btn" href="#current-lesson">Resume Lesson <span>→</span></a>
+            </div>
+          </div>
+        </article>
       </section>
-      <section class="dashboard-grid">
-        <article class="dashboard-card"><span class="portal-badge">Course</span><h2>Robotics Course</h2><p>Continue your assigned robotics lessons and modules.</p></article>
-        <article class="dashboard-card"><span class="portal-badge">Progress</span><h2>My Progress</h2><p>See completed lessons, quizzes and overall course progress.</p></article>
-        <article class="dashboard-card"><span class="portal-badge">Schedule</span><h2>Upcoming Sessions</h2><p>View upcoming club sessions and schedule updates.</p></article>
+
+      <section class="student-main-grid">
+        <article class="student-panel course-panel" id="my-course">
+          <div class="panel-heading compact"><h2>My Course</h2></div>
+          <div class="course-summary">
+            <img src="Assets/robotics-student.jpg" alt="Robotics and coding course" />
+            <div>
+              <span class="assigned-pill">✓ Assigned Course</span>
+              <h3>Robotics &amp; Coding</h3>
+              <p>Build. Code. Create.</p>
+              <div class="course-progress-line"><div class="progress-track"><span style="width:38%"></span></div><strong>38%</strong></div>
+            </div>
+          </div>
+          <div class="course-menu">
+            <a href="#current-lesson"><span>▤</span><strong>Modules</strong><small>6 Modules</small><b>›</b></a>
+            <a href="#current-lesson"><span>▶</span><strong>Lessons</strong><small>32 Lessons</small><b>›</b></a>
+            <a href="#current-lesson"><span>✓</span><strong>Quizzes</strong><small>10 Quizzes</small><b>›</b></a>
+            <a href="#progress"><span>▥</span><strong>Your Progress</strong><small>12 / 32 Completed</small><b>›</b></a>
+          </div>
+        </article>
+
+        <article class="student-panel lesson-panel" id="current-lesson">
+          <div class="panel-heading compact"><h2>Current Lesson</h2><a href="#my-course">Go to Module →</a></div>
+          <div class="lesson-video-card" role="img" aria-label="Video lesson preview">
+            <img src="Assets/robotics-student.jpg" alt="Learner completing robotics lesson" />
+            <span class="play-button">▶</span>
+            <div class="video-bar"><span>▶</span><span>0:00 / 18:24</span><span class="video-tools">CC ⚙ ⛶</span></div>
+          </div>
+          <h3>Module 2: Sensors and Movement</h3>
+          <h4>Lesson 3: Ultrasonic Sensor Introduction</h4>
+          <p>Learn how ultrasonic sensors work and how to use them in your robot.</p>
+          <div class="content-type-row" aria-label="Supported lesson content types">
+            <span class="type-video">▶ Video</span>
+            <span class="type-image">▧ Images</span>
+            <span class="type-gif">GIF GIFs</span>
+            <span class="type-text">▤ Text</span>
+            <span class="type-embed">↗ Embedded</span>
+          </div>
+        </article>
+
+        <aside class="student-side-column">
+          <article class="student-panel schedule-panel" id="schedule">
+            <div class="panel-heading compact"><h2>Upcoming Club Sessions</h2><a href="#schedule">View All →</a></div>
+            <div class="session-list">
+              <div class="session-item"><div class="session-date"><strong>SEP</strong><span>25</span></div><div><strong>Robotics Class</strong><p>3:00 PM – 4:30 PM</p><small>📍 Parklands Club</small></div><span class="next-pill">Next</span></div>
+              <div class="session-item"><div class="session-date"><strong>OCT</strong><span>02</span></div><div><strong>Robotics Class</strong><p>3:00 PM – 4:30 PM</p><small>📍 Parklands Club</small></div><b>›</b></div>
+              <div class="session-item"><div class="session-date"><strong>OCT</strong><span>09</span></div><div><strong>Robotics Class</strong><p>3:00 PM – 4:30 PM</p><small>📍 Parklands Club</small></div><b>›</b></div>
+            </div>
+          </article>
+
+          <article class="student-panel achievements-panel">
+            <div class="panel-heading compact"><h2>My Achievements</h2></div>
+            <div class="achievement-item"><span class="achievement-icon green">✓</span><div><strong>Module 1 Completed</strong><small>5 Sep 2026</small></div><b>›</b></div>
+            <div class="achievement-item"><span class="achievement-icon purple">★</span><div><strong>Quiz Score: 90%</strong><small>Lesson 4 – Basic Programming</small></div><b>›</b></div>
+          </article>
+        </aside>
+      </section>
+
+      <section class="student-panel resources-panel">
+        <div class="resources-head">
+          <div><h2>📘 Lesson Resources</h2><p>Helpful resources for your learning journey. <strong>View only — no downloads.</strong></p></div>
+          <div class="view-only-note">🔒 Resources can be viewed inside the platform and cannot be downloaded.</div>
+        </div>
+        <div class="resource-grid">
+          <button type="button" class="resource-card resource-blue"><span>▣</span><div><strong>Robotics Guide</strong><small>Interactive Guide</small></div><b>◉</b></button>
+          <button type="button" class="resource-card resource-green"><span>▧</span><div><strong>Circuit Diagrams</strong><small>Image Gallery</small></div><b>◉</b></button>
+          <button type="button" class="resource-card resource-purple"><span>GIF</span><div><strong>Sensor Animations</strong><small>GIF Resources</small></div><b>◉</b></button>
+          <button type="button" class="resource-card resource-orange"><span>▤</span><div><strong>Key Concepts</strong><small>Text Notes</small></div><b>◉</b></button>
+          <button type="button" class="resource-card resource-pink"><span>↗</span><div><strong>External Resources</strong><small>Embedded Content</small></div><b>◉</b></button>
+        </div>
       </section>
     </div>
   </main>
-  <footer class="site-footer simple-footer"><div class="container footer-bottom"><span>© 2026 Kids Innovate Africa. All rights reserved.</span><a href="contact.html">Contact Support</a></div></footer>
+
   <script src="script.js"></script>
 </body>
 </html>

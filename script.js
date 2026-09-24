@@ -67,6 +67,19 @@
       }
 
       const role = selectedRole && validRoles.includes(selectedRole.value) ? selectedRole.value : 'student';
+
+      const demoAccounts = {
+        student: { username: 'student01', password: 'KIAstudent2026!' },
+        mompreneur: { username: 'mompreneur01', password: 'KIAmom2026!' },
+        admin: { username: 'admin01', password: 'KIAadmin2026!' }
+      };
+
+      const account = demoAccounts[role];
+      if (!account || username !== account.username || pass !== account.password) {
+        message.textContent = 'Incorrect temporary login details for this portal.';
+        return;
+      }
+
       message.textContent = 'Opening your portal…';
       window.setTimeout(() => {
         window.location.href = destinations[role];
