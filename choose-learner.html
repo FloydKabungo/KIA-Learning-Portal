@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; frame-src https: blob:; connect-src https:; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <script src="portal-security.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Choose your learner | Kids Innovate Africa</title>
+    <link rel="icon" href="Assets/kia-mark.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="accounts.css" />
+    <script src="portal-store.js" defer></script>
+    <script src="learning-data.js" defer></script>
+    <script src="club-schedule-data.js" defer></script>
+    <script src="admin-data.js" defer></script>
+    <script src="accounts.js" defer></script>
+    <script src="lms-data.js" defer></script>
+    <script src="account-pages.js" defer></script>
+  </head>
+  <body class="login-body" data-account-page="choose">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html"
+          ><img src="Assets/kia-mark.png" class="brand-mark" alt="KIA Africa logo" />
+          <div class="brand-copy"><span>KIDS</span><span>INNOVATE</span><span>AFRICA</span></div></a
+        >
+        <nav class="desktop-nav">
+          <a href="contact.html">Need help?</a><a class="nav-login" href="login.html">Login</a>
+        </nav>
+      </div>
+    </header>
+    <main class="family-main">
+      <section class="family-panel">
+        <p class="eyebrow">WELCOME BACK</p>
+        <h1>Who’s learning today?</h1>
+        <p>Choose a learner linked to your parent or guardian email.</p>
+        <div id="account-screen" class="learner-choice-grid"></div>
+      </section>
+    </main>
+    <footer class="site-footer simple-footer">
+      <div class="container footer-bottom">
+        <span>© 2026 Kids Innovate Africa</span><a href="contact.html">Contact KIA Support</a>
+      </div>
+    </footer>
+    <script src="script.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en" class="auth-loading">
+  <head>
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; frame-src https: blob:; connect-src https:; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <script src="portal-security.js" defer></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="View your club's Robotics sessions and class changes with Kids Innovate Africa."
+    />
+    <title>My Schedule | Kids Innovate Africa</title>
+    <link rel="icon" href="Assets/kia-mark.png" type="image/png" />
+    <link rel="stylesheet" href="learning.css" />
+    <link rel="stylesheet" href="schedule.css" />
+    <link rel="stylesheet" href="accounts.css" />
+    <script src="portal-store.js" defer></script>
+    <script src="learning-data.js" defer></script>
+    <script src="club-schedule-data.js" defer></script>
+    <script src="admin-data.js" defer></script>
+    <script src="accounts.js" defer></script>
+    <script src="lms-data.js" defer></script>
+    <script src="learner-profile.js" defer></script>
+    <script src="learner-announcements.js" defer></script>
+    <script src="schedule.js" defer></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="lms-features.css" />
+
+    <link rel="stylesheet" href="schedule-page.css" />
+  </head>
+  <body>
+    <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="m3 10 9-7 9 7M5 9v11h5v-6h4v6h5V9" />
+      </symbol>
+      <symbol id="i-book" viewBox="0 0 24 24">
+        <path
+          d="M12 5v15M3 4h5a4 4 0 0 1 4 2 4 4 0 0 1 4-2h5v15h-5a4 4 0 0 0-4 2 4 4 0 0 0-4-2H3Z"
+        />
+      </symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="16" rx="3" />
+        <path d="M8 3v4m8-4v4M3 10h18M8 14h2m4 0h2m-8 3h2" />
+      </symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6" /></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 4 8 8-8 8" /></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24">
+        <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z" />
+        <circle cx="12" cy="10" r="2" />
+      </symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24">
+        <path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10ZM10 21h4" />
+      </symbol>
+      <symbol id="i-exit" viewBox="0 0 24 24">
+        <path d="M10 4H4v16h6m-1-8h12m-4-4 4 4-4 4" />
+      </symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z" /></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24">
+        <path d="m12 3 10 5-10 5L2 8Zm-9 9 9 5 9-5M3 16l9 5 9-5" />
+      </symbol>
+      <symbol id="i-quiz" viewBox="0 0 24 24">
+        <path d="M9 4H5v17h14V4h-4" />
+        <rect x="9" y="2" width="6" height="5" rx="1" />
+        <path d="m8 13 3 3 5-5" />
+      </symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 3v18h17M8 16v-4m5 4V8m5 8V5" /></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-file" viewBox="0 0 24 24">
+        <path d="M14 2H5v20h14V7Zm0 0v6h5M8 12h8m-8 4h6" />
+      </symbol>
+      <symbol id="i-image" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <circle cx="8" cy="8" r="1.5" />
+        <path d="m3 17 6-5 4 4 3-3 5 4" />
+      </symbol>
+      <symbol id="i-link" viewBox="0 0 24 24">
+        <path d="m9 15 6-6M9 7l3-3a5 5 0 0 1 8 8l-3 3M7 9l-3 3a5 5 0 0 0 8 8l3-3" />
+      </symbol>
+      <symbol id="i-help" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9 9a3 3 0 1 1 5 2c-2 1-2 2-2 3m0 3h.01" />
+      </symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6" /></symbol>
+      <symbol id="i-robot" viewBox="0 0 24 24">
+        <rect x="4" y="7" width="16" height="14" rx="4" />
+        <path d="M12 3v4M2 12v5m20-5v5M9 17h6m-7-6v2m8-2v2" />
+        <circle cx="12" cy="3" r="1" />
+      </symbol>
+    </svg>
+    <a class="skip-link" href="#main">Skip to schedule</a>
+    <header class="topbar">
+      <div class="header-inner">
+        <a class="brand" href="student.html" aria-label="Kids Innovate Africa learner home">
+          <img src="Assets/kia-mark.png" alt="" width="36" height="48" />
+          <span>KIDS<br />INNOVATE<br />AFRICA</span>
+        </a>
+        <nav class="primary-nav" aria-label="Learner navigation">
+          <a href="student.html"
+            ><svg class="icon"><use href="#i-home" /></svg><span>Home</span></a
+          >
+          <a href="my-learning.html"
+            ><svg class="icon"><use href="#i-book" /></svg><span>My Learning</span></a
+          >
+          <a href="schedule.html" aria-current="page"
+            ><svg class="icon"><use href="#i-calendar" /></svg><span>Schedule</span></a
+          >
+        </nav>
+        <div class="account">
+          <div class="notification-wrap">
+            <button
+              class="icon-button notification-button"
+              id="notification-button"
+              aria-label="Club notifications"
+              aria-expanded="false"
+              aria-controls="notifications"
+            >
+              <svg class="icon"><use href="#i-bell" /></svg><span class="notification-dot"></span>
+            </button>
+            <section
+              id="notifications"
+              class="notification-popover"
+              aria-label="Club notifications"
+              hidden
+            >
+              <strong>Your club update</strong>
+              <p>Your Robotics class on Friday, 9 October now starts at 16:00.</p>
+              <a href="schedule.html?session=club-2026-10-09"
+                >See class change <svg class="icon"><use href="#i-arrow" /></svg
+              ></a>
+            </section>
+          </div>
+          <span class="avatar" aria-hidden="true">S</span>
+          <div class="account-name"><strong>Sean</strong><small>Learner</small></div>
+          <a class="logout" href="login.html" aria-label="Log out"
+            ><svg class="icon"><use href="#i-exit" /></svg><span>Log out</span></a
+          >
+        </div>
+      </div>
+    </header>
+    <main id="main" class="page schedule-page">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">YOUR CLUB, YOUR NEXT DISCOVERY</p>
+          <h1>My Schedule<span>.</span></h1>
+          <p class="page-intro">Your club sessions, all in one place.</p>
+        </div>
+        <span class="club-label"
+          ><svg class="icon"><use href="#i-pin" /></svg>Parklands Club</span
+        >
+      </div>
+      <div class="schedule-layout">
+        <div class="calendar-column">
+          <section class="calendar-card" aria-label="Club calendar">
+            <div class="calendar-toolbar">
+              <div class="month-navigation">
+                <button id="previous-month" class="month-arrow" aria-label="Previous month">
+                  <svg class="icon"><use href="#i-chevron" /></svg>
+                </button>
+                <h2 id="month-heading" aria-live="polite">October 2026</h2>
+                <button id="next-month" class="month-arrow" aria-label="Next month">
+                  <svg class="icon"><use href="#i-chevron" /></svg>
+                </button>
+              </div>
+              <div class="view-switch" role="tablist" aria-label="Schedule view">
+                <button
+                  id="view-month"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="month-panel"
+                  tabindex="0"
+                >
+                  Month</button
+                ><button
+                  id="view-list"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="list-panel"
+                  tabindex="-1"
+                >
+                  List
+                </button>
+              </div>
+            </div>
+            <div class="calendar-legend">
+              <span><i class="legend-dot blue-dot"></i>Club session</span
+              ><span><i class="legend-dot amber-dot"></i>Class change</span>
+            </div>
+            <div id="month-panel" role="tabpanel" aria-labelledby="view-month">
+              <div class="calendar-table-wrap">
+                <table class="calendar-table">
+                  <caption id="calendar-caption" class="sr-only">
+                    October 2026 club sessions
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col"><abbr title="Monday">MON</abbr></th>
+                      <th scope="col"><abbr title="Tuesday">TUE</abbr></th>
+                      <th scope="col"><abbr title="Wednesday">WED</abbr></th>
+                      <th scope="col"><abbr title="Thursday">THU</abbr></th>
+                      <th scope="col"><abbr title="Friday">FRI</abbr></th>
+                      <th scope="col"><abbr title="Saturday">SAT</abbr></th>
+                      <th scope="col"><abbr title="Sunday">SUN</abbr></th>
+                    </tr>
+                  </thead>
+                  <tbody id="calendar-days"></tbody>
+                </table>
+              </div>
+              <p class="mobile-calendar-tip">Tap a date to see session details.</p>
+            </div>
+            <div id="list-panel" role="tabpanel" aria-labelledby="view-list" hidden>
+              <div id="month-session-list"></div>
+            </div>
+            <noscript
+              ><p class="calendar-empty">
+                Enable JavaScript to view the interactive club calendar.
+              </p></noscript
+            >
+          </section>
+          <section class="coming-up-card" aria-labelledby="coming-up-heading">
+            <h2 id="coming-up-heading">Coming up</h2>
+            <div id="coming-up-list" class="agenda-list"></div>
+          </section>
+        </div>
+        <aside class="schedule-aside" aria-label="Session details and class changes">
+          <section class="schedule-session-card" aria-live="polite" aria-atomic="true">
+            <div class="schedule-card-heading">
+              <h2 id="session-card-title">Next club session</h2>
+              <span class="live-dot" aria-hidden="true"></span>
+            </div>
+            <div id="selected-session"></div>
+          </section>
+          <button class="class-change-card" id="class-change-button" type="button">
+            <span class="change-clock"
+              ><svg class="icon"><use href="#i-clock" /></svg></span
+            ><span class="change-copy"
+              ><strong>Class time updated</strong><span class="change-date">Friday, 9 October</span
+              ><span class="change-message"
+                >Your Robotics class will now run from 16:00 to 17:30.</span
+              ><small>Updated by your Mompreneur</small></span
+            >
+          </button>
+          <section class="schedule-help-card">
+            <span class="schedule-help-icon"
+              ><svg class="icon"><use href="#i-help" /></svg
+            ></span>
+            <div>
+              <h2>Need help with a session?</h2>
+              <p>Speak to your Mompreneur about class times or changes.</p>
+            </div>
+          </section>
+        </aside>
+      </div>
+      <footer class="page-footer">
+        <span
+          >Kids Innovate Africa <span class="footer-separator">/</span> Build. Code. Create.</span
+        ><span>Design preview · Sample sessions</span>
+      </footer>
+    </main>
+    <dialog id="session-dialog" aria-labelledby="session-dialog-title">
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">PARKLANDS CLUB · IN PERSON</p>
+          <h2 id="session-dialog-title">Robotics class</h2>
+        </div>
+        <button class="icon-button dialog-close" aria-label="Close session details">
+          <svg class="icon"><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <div id="session-dialog-content" class="dialog-content"></div>
+    </dialog>
+  </body>
+</html>

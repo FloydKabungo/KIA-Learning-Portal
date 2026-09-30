@@ -10,79 +10,66 @@
     });
   }
 
-  const toggle = document.querySelector('.password-toggle');
-  const password = document.querySelector('#password');
-  if (toggle && password) {
+  document.querySelectorAll('.password-toggle').forEach((toggle) => {
+    const password = document.getElementById(toggle.dataset.passwordTarget || 'password');
+    if (!password) return;
     toggle.addEventListener('click', () => {
       const showing = password.type === 'text';
       password.type = showing ? 'password' : 'text';
       toggle.textContent = showing ? 'Show' : 'Hide';
       toggle.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
     });
-  }
-
-  const validRoles = ['student', 'mompreneur', 'admin'];
-  const destinations = {
-    student: 'student.html',
-    mompreneur: 'mompreneur.html',
-    admin: 'admin.html'
-  };
-
-  const roleButtons = [...document.querySelectorAll('[data-role-choice]')];
-  const selectedRole = document.querySelector('#selected-role');
-  const loginTitle = document.querySelector('#login-title');
-
-  function setRole(role) {
-    const safeRole = validRoles.includes(role) ? role : 'student';
-    if (selectedRole) selectedRole.value = safeRole;
-    roleButtons.forEach((button) => {
-      const active = button.dataset.roleChoice === safeRole;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-pressed', String(active));
-    });
-    if (loginTitle) {
-      const labels = { student: 'Student login', mompreneur: 'Mompreneur login', admin: 'KIA Admin login' };
-      loginTitle.textContent = labels[safeRole];
-    }
-  }
-
-  if (roleButtons.length) {
-    const queryRole = new URLSearchParams(window.location.search).get('role');
-    setRole(validRoles.includes(queryRole) ? queryRole : 'student');
-    roleButtons.forEach((button) => {
-      button.addEventListener('click', () => setRole(button.dataset.roleChoice));
-    });
-  }
+  });
 
   const loginForm = document.querySelector('#login-form');
   const message = document.querySelector('#login-message');
   if (loginForm && message) {
-    loginForm.addEventListener('submit', (event) => {
+    const Auth = window.KIAAccounts;
+    Auth.logout();
+    const hint = window.KIAStorage.read('kia-login-email-hint');
+    if (hint) {
+      loginForm.email.value = hint;
+      window.KIAStorage.write('kia-login-email-hint', null);
+    }
+    let openingPortal = false;
+
+    loginForm.addEventListener('input', () => {
+      if (!openingPortal) message.textContent = '';
+    });
+
+    loginForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const username = loginForm.username.value.trim();
+      if (openingPortal) return;
+      const email = loginForm.email.value.trim().toLowerCase();
       const pass = loginForm.password.value;
-      if (!username || !pass) {
-        message.textContent = 'Please enter your username/email and password.';
+      if (!email || !pass) {
+        message.textContent = 'Please enter your email or username and password.';
         return;
       }
 
-      const role = selectedRole && validRoles.includes(selectedRole.value) ? selectedRole.value : 'student';
-
-      const demoAccounts = {
-        student: { username: 'student01', password: 'KIAstudent2026!' },
-        mompreneur: { username: 'mompreneur01', password: 'KIAmom2026!' },
-        admin: { username: 'admin01', password: 'KIAadmin2026!' }
-      };
-
-      const account = demoAccounts[role];
-      if (!account || username !== account.username || pass !== account.password) {
-        message.textContent = 'Incorrect temporary login details for this portal.';
+      if (!loginForm.reportValidity()) return;
+      openingPortal = true;
+      loginForm.querySelector('[type="submit"]').disabled = true;
+      let account;
+      try {
+        account = await Auth.authenticate(email, pass);
+      } catch {
+        account = null;
+      }
+      if (!account) {
+        message.textContent =
+          'Unable to log in. Check your details or complete your invitation setup. If learners share an email, use the learner’s own username.';
+        openingPortal = false;
+        loginForm.querySelector('[type="submit"]').disabled = false;
         return;
       }
 
+      openingPortal = true;
+      loginForm.querySelector('[type="submit"]').disabled = true;
+      loginForm.setAttribute('aria-busy', 'true');
       message.textContent = 'Opening your portal…';
       window.setTimeout(() => {
-        window.location.href = destinations[role];
+        window.location.href = account.destination;
       }, 350);
     });
   }

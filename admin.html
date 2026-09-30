@@ -1,40 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="auth-loading">
+
 <head>
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; frame-src https: blob:; connect-src https:; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <script src="portal-security.js" defer></script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0874d8" />
+  <title>Admin Dashboard | Kids Innovate Africa</title>
   <link rel="icon" href="Assets/kia-mark.png" type="image/png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-  <title>KIA Admin Portal | KIA Learning Portal</title>
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="accounts.css" />
+  <script src="portal-store.js" defer></script>
+  <script src="learning-data.js" defer></script>
+  <script src="club-schedule-data.js" defer></script>
+  <script src="admin-data.js" defer></script>
+  <script src="accounts.js" defer></script>
+  <script src="lms-data.js" defer></script>
+  <script src="pdf-viewer.js" defer></script>
+  <script src="lesson-player.js" defer></script>
+  <script src="admin-lms.js" defer></script>
+  <script src="admin-learning.js" defer></script>
+  <script src="admin.js" defer></script>
+  <link rel="stylesheet" href="lms-features.css" />
+  <link rel="stylesheet" href="frontend-features.css" />
+
+  <link rel="stylesheet" href="admin-page.css" />
 </head>
-<body class="portal-body">
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="index.html"><img src="Assets/kia-mark.png" alt="KIA Africa logo" class="brand-mark" /><div class="brand-copy" aria-hidden="true"><span>KIDS</span><span>INNOVATE</span><span>AFRICA</span></div></a>
-      <nav class="desktop-nav"><a href="index.html">Home</a><a href="contact.html">Contact</a><a class="nav-login" href="login.html">Log out</a></nav>
+
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="topbar">
+    <button id="menu-toggle" class="icon-button menu-toggle" aria-label="Open navigation" aria-controls="sidebar"
+      aria-expanded="false">
+      <span data-icon="menu"></span>
+    </button>
+    <a class="brand" href="admin.html" aria-label="Kids Innovate Africa Admin dashboard"><img src="Assets/kia-mark.png"
+        width="47" height="58" alt="" /><span>KIDS<br />INNOVATE<br />AFRICA</span></a>
+    <nav id="top-nav" class="top-nav" aria-label="Main navigation"></nav>
+    <div class="account-wrap">
+      <button id="account-toggle" class="account-button" aria-expanded="false" aria-controls="account-menu">
+        <span class="avatar">KA</span><span>Admin</span><span data-icon="down"></span>
+      </button>
+      <div id="account-menu" class="account-menu" hidden>
+        <strong>KIA Administrator</strong><small>Access to all branches</small><a href="#settings">Platform
+          settings</a><a href="login.html">Log out <span data-icon="exit"></span></a>
+      </div>
     </div>
   </header>
-  <main class="portal-main">
-    <div class="container">
-      <section class="portal-heading">
-        <p class="eyebrow">PLATFORM ADMINISTRATION</p>
-        <h1>KIA Admin Portal</h1>
-        <p>Manage the full KIA learning platform across all branches, users and course content.</p>
-      </section>
-      <section class="dashboard-grid">
-        <article class="dashboard-card"><span class="portal-badge">Branches</span><h2>Manage Branches</h2><p>Create and oversee all Mompreneur club branches.</p></article>
-        <article class="dashboard-card"><span class="portal-badge">Users</span><h2>Mompreneurs & Learners</h2><p>Manage Mompreneur and learner accounts across the platform.</p></article>
-        <article class="dashboard-card"><span class="portal-badge">Courses</span><h2>Course Management</h2><p>Create courses, modules, lessons, quizzes and learning content.</p></article>
-        <article class="dashboard-card"><span class="portal-badge">Progress</span><h2>Learner Progress</h2><p>Review progress across all learners and branches.</p></article>
-        <article class="dashboard-card"><span class="portal-badge">Reports</span><h2>Reports & Analytics</h2><p>View standard LMS analytics and branch performance.</p></article>
-        <article class="dashboard-card"><span class="portal-badge">Schedule</span><h2>Schedules</h2><p>Review and manage learning schedules across branches.</p></article>
-      </section>
+  <button id="nav-backdrop" class="nav-backdrop" aria-label="Close navigation" hidden></button>
+  <div class="app-layout">
+    <aside id="sidebar" class="sidebar">
+      <p class="nav-caption">MAIN MENU</p>
+      <nav id="side-nav" class="side-nav" aria-label="Admin navigation"></nav>
+      <div class="sidebar-bottom">
+        <a href="contact.html" class="support-link"><span data-icon="help"></span><span><strong>Need
+              help?</strong><small>Contact KIA support</small></span><span data-icon="chevron"></span></a><a
+          class="sidebar-logout" href="login.html"><span data-icon="exit"></span>Log out</a>
+      </div>
+    </aside>
+    <main id="main-content" class="main-content" tabindex="-1">
+      <div class="page-toolbar">
+        <div class="breadcrumb">
+          ADMIN PORTAL <span>/</span> <strong id="current-page-label">Dashboard</strong>
+        </div>
+        <div class="scope-controls">
+          <span class="demo-pill">Demo data</span><label for="branch-filter" class="sr-only">Filter by
+            branch</label><select id="branch-filter">
+            <option value="all">All branches</option>
+          </select>
+        </div>
+      </div>
+      <div id="admin-view"></div>
+      <noscript>
+        <p>This interactive preview needs JavaScript enabled in your browser.</p>
+      </noscript>
+      <footer class="page-footer">
+        <span>© 2026 Kids Innovate Africa</span><span>One community. Brighter futures.</span>
+      </footer>
+    </main>
+  </div>
+  <dialog id="admin-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-heading">
+      <div>
+        <p id="dialog-kicker" class="eyebrow">KIA ADMIN</p>
+        <h2 id="dialog-title"></h2>
+      </div>
+      <button class="icon-button" data-close-dialog aria-label="Close dialog">
+        <span data-icon="close"></span>
+      </button>
     </div>
-  </main>
-  <footer class="site-footer simple-footer"><div class="container footer-bottom"><span>© 2026 Kids Innovate Africa. All rights reserved.</span><a href="contact.html">Contact Support</a></div></footer>
-  <script src="script.js"></script>
+    <div id="dialog-body"></div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
+
 </html>
