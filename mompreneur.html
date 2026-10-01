@@ -25,6 +25,7 @@
     <script src="lesson-player.js" defer></script>
     <script src="admin-lms.js" defer></script>
     <script src="admin-learning.js" defer></script>
+    <script src="mompreneur.js" defer></script>
     <script src="admin.js" defer></script>
     <link rel="stylesheet" href="lms-features.css" />
     <link rel="stylesheet" href="frontend-features.css" />
@@ -49,6 +50,13 @@
         ></a
       >
       <nav id="top-nav" class="top-nav" aria-label="Main navigation"></nav>
+      <a
+        id="mom-notification-link"
+        class="mom-notification-bell icon-button"
+        href="#notifications"
+        aria-label="Notifications"
+        ><span data-icon="bell"></span><span id="mom-notification-count" hidden></span
+      ></a>
       <div class="account-wrap">
         <button
           id="account-toggle"
@@ -59,7 +67,8 @@
           <span class="avatar">KA</span><span>Mompreneur</span><span data-icon="down"></span>
         </button>
         <div id="account-menu" class="account-menu" hidden>
-          <strong>Mompreneur</strong><small>Your own club</small><a href="#users">My learners</a
+          <strong>Mompreneur</strong><small>Your own club</small><a href="#users">My club members</a
+          ><a href="#settings">My profile & settings</a
           ><a href="login.html">Log out <span data-icon="exit"></span></a>
         </div>
       </div>
@@ -67,8 +76,8 @@
     <button id="nav-backdrop" class="nav-backdrop" aria-label="Close navigation" hidden></button>
     <div class="app-layout">
       <aside id="sidebar" class="sidebar">
-        <p class="nav-caption">MAIN MENU</p>
-        <nav id="side-nav" class="side-nav" aria-label="Admin navigation"></nav>
+        <p class="nav-caption">MOMPRENEUR</p>
+        <nav id="side-nav" class="side-nav" aria-label="Mompreneur navigation"></nav>
         <div class="sidebar-bottom">
           <a href="contact.html" class="support-link"
             ><span data-icon="help"></span
@@ -102,7 +111,7 @@
     <dialog id="admin-dialog" aria-labelledby="dialog-title">
       <div class="dialog-heading">
         <div>
-          <p id="dialog-kicker" class="eyebrow">KIA ADMIN</p>
+          <p id="dialog-kicker" class="eyebrow">MY CLUB</p>
           <h2 id="dialog-title"></h2>
         </div>
         <button class="icon-button" data-close-dialog aria-label="Close dialog">

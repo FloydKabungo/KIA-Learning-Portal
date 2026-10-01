@@ -19,6 +19,10 @@
   const $$ = (selector) => [...document.querySelectorAll(selector)];
   const esc = window.KIASecurity.escapeHTML;
   const iconPaths = {
+    bell: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4M12 2V1"/>',
+    heart:
+      '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
+    left: '<path d="m15 5-7 7 7 7"/>',
     mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m3 6 9 7 9-7"/>',
     home: '<path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/>',
     users:
@@ -65,13 +69,18 @@
   });
   const nav = isMom
     ? [
-        ['dashboard', 'My Club', 'home'],
-        ['users', 'My Learners', 'users'],
-        ['invitations', 'Invitations', 'mail'],
+        ['dashboard', 'Home', 'home'],
+        ['users', 'My Club Members', 'users'],
         ['courses', 'My Training', 'course'],
-        ['content', 'Resources', 'content'],
+        ['progress', 'Learner Progress', 'report'],
         ['schedules', 'Club Schedule', 'calendar'],
-        ['reports', 'Learner Progress', 'report'],
+        ['reports', 'Reports', 'file'],
+        ['settings', 'My Settings', 'settings'],
+        ['notifications', 'Notifications', 'bell'],
+        ['announcements', 'Club Announcements', 'mail'],
+        ['invitations', 'Invitations', 'mail'],
+        ['groups', 'Learning Groups', 'users'],
+        ['content', 'Resources', 'content'],
       ]
     : [
         ['dashboard', 'Dashboard', 'home'],
@@ -84,12 +93,13 @@
         ['reports', 'Reports', 'report'],
         ['settings', 'Settings', 'settings'],
       ];
-  nav.splice(
-    3,
-    0,
-    ['groups', 'Learning Groups', 'users'],
-    ['announcements', 'Announcements', 'mail']
-  );
+  if (!isMom)
+    nav.splice(
+      3,
+      0,
+      ['groups', 'Learning Groups', 'users'],
+      ['announcements', 'Announcements', 'mail']
+    );
   if (!isMom) nav.splice(2, 0, ['invitations', 'Invitations', 'mail']);
   $('#side-nav').innerHTML = nav
     .map(
@@ -98,13 +108,14 @@
     )
     .join('');
   $('#top-nav').innerHTML = nav
-    .filter(
-      ([route]) =>
-        !['certificates', 'settings', 'invitations', 'groups', 'announcements'].includes(route)
+    .filter(([route]) =>
+      isMom
+        ? ['dashboard', 'users', 'courses', 'progress', 'reports', 'settings'].includes(route)
+        : !['certificates', 'settings', 'invitations', 'groups', 'announcements'].includes(route)
     )
     .map(
       ([route, label, symbol]) =>
-        `<a href="#${route}" data-nav="${route}">${icon(symbol)}<span>${route === 'users' ? (isMom ? 'Learners' : 'Users') : label}</span></a>`
+        `<a href="#${route}" data-nav="${route}">${icon(symbol)}<span>${isMom ? { users: 'My Club', courses: 'Courses', progress: 'Progress', settings: 'Settings' }[route] || label : route === 'users' ? 'Users' : label}</span></a>`
     )
     .join('');
   $('#account-menu strong').textContent = actor.name;
@@ -522,6 +533,7 @@
     else if (scope !== 'all' && !branch(scope)) scope = 'all';
     scopeOptions();
     const active = route();
+    if (isMom) mom.updateChrome();
     const label = nav.find((n) => n[0] === active)[1];
     $('#current-page-label').textContent = label;
     document.title = `${label} | KIA ${isMom ? 'Mompreneur' : 'Admin'}`;
@@ -538,18 +550,20 @@
       return;
     }
     $('#admin-view').innerHTML = {
-      dashboard: isMom ? momDashboard : dashboard,
-      users: usersView,
+      dashboard: isMom ? mom.dashboard : dashboard,
+      users: isMom ? mom.membersView : usersView,
       invitations: invitationsView,
       branches: branchesView,
       courses: coursesView,
       content: contentView,
-      schedules: schedulesView,
+      schedules: isMom ? mom.scheduleView : schedulesView,
+      progress: isMom ? mom.progressView : lms.reportsView,
+      notifications: isMom ? mom.notificationsView : lms.announcementsView,
       groups: lms.groupsView,
       announcements: lms.announcementsView,
       reports: lms.reportsView,
       certificates: certificatesView,
-      settings: settingsView,
+      settings: isMom ? mom.settingsView : settingsView,
     }[active]();
   }
 
@@ -595,6 +609,10 @@
       $('#form-error').textContent = '';
       try {
         const result = await handler(Object.fromEntries(new FormData(element)), element);
+        if (result?.loggedOut) {
+          location.replace('login.html');
+          return;
+        }
         if (!Auth.checkPage()) {
           location.replace('login.html');
           return;
@@ -1016,17 +1034,6 @@
       }</section>`
     );
   }
-  function momDashboard() {
-    const list = learners(),
-      pending = list.filter((u) => u.accessStatus === 'pending').length;
-    return `<section class="admin-hero"><div class="hero-copy"><p class="eyebrow">${esc(branchName(scope))}</p><h1>Your club.<br/>Their next chapter.</h1><p>Welcome back, ${esc(actor.name.split(' ')[0])}. Support your learners, welcome their families and keep your club learning.</p></div><div class="hero-motto" aria-hidden="true">${icon('course')}Small steps.<br/>Big discoveries.</div><div class="hero-art" role="img" aria-label="A learner using a laptop"></div></section><div class="dashboard-top"><div class="stats-grid">${stat('My Learners', list.length, 'Enrolled in your club', 'users', 'blue')}${stat('Setup Pending', pending, 'Parent / guardian action', 'mail', 'amber')}${stat('Average Progress', average(list) + '%', 'Robotics learning', 'report', 'purple')}${stat('Club Sessions', sessions().length, 'Your own schedule', 'calendar', 'green')}</div><section class="panel quick-actions">${panelHeading('Quick Actions', 'bolt')}<div class="quick-grid"><button data-action="add-user">${icon('users')}Add Learner</button><button data-action="open-invitations">${icon('mail')}Invitations</button><button data-action="assign-course">${icon('course')}Assign Course</button><button data-action="add-session">${icon('calendar')}Add Session</button></div></section></div>${lms.dashboardLinks()}<section class="panel">${panelHeading('My Club Learners', 'users', 'users')}<div>${usersRows()}</div></section><div class="dashboard-bottom"><section class="panel">${panelHeading('Club Activity', 'clock')}<div class="activity-list">${activityRows(state.activity.filter((a) => a.branchId === scope).slice(0, 4)) || '<p class="subtle">Your club updates will appear here.</p>'}</div></section><section class="panel">${panelHeading('Your Training', 'course', 'courses')}<div class="activity-list">${state.courses
-      .filter((c) => window.KIALearning.assigned(actor, c))
-      .map(
-        (c) =>
-          `<a class="activity-row" href="#courses"><span class="round-icon tone-blue">${icon('course')}</span><span class="activity-copy"><strong>${esc(c.title)}${window.KIALearning.unlocked(actor, c.id, state) ? '' : ' · Locked'}</strong><p>${c.modules.length} modules · ${totalLessons(c)} lessons</p></span>${icon('chevron')}</a>`
-      )
-      .join('')}</div></section></div>`;
-  }
   function courseForm(id) {
     const existing = course(id),
       c = existing || { title: '', description: '', audience: 'learners', status: 'draft' };
@@ -1248,7 +1255,7 @@
     openDialog(item.title, '<div id="admin-resource-player"></div>', 'CONTENT PREVIEW');
     await window.KIAPlayer.resource($('#admin-resource-player'), item);
   }
-  function sessionForm(id) {
+  function sessionForm(id, selectedDate) {
     const existing = state.sessions.find((s) => s.id === id),
       tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
     if (isMom && ((existing && existing.branchId !== actor.branchId) || !branch(actor.branchId))) {
@@ -1258,7 +1265,7 @@
     const s = existing || {
       title: 'Robotics class',
       branchId: scope === 'all' ? state.branches[0]?.id : scope,
-      date: tomorrow,
+      date: window.KIASecurity.isDate(selectedDate) ? selectedDate : tomorrow,
       start: '15:00',
       end: '16:30',
       location: scope === 'all' ? state.branches[0]?.name : branchName(scope),
@@ -1300,7 +1307,10 @@
           note: data.note.trim(),
           previousStart: existing?.previousStart || null,
           previousEnd: existing?.previousEnd || null,
+          previousDate: existing?.previousDate || null,
+          updatedAt: new Date().toISOString(),
         };
+        if (existing && existing.date !== data.date) next.previousDate = existing.date;
         if (existing && (existing.start !== data.start || existing.end !== data.end)) {
           next.previousStart = existing.start;
           next.previousEnd = existing.end;
@@ -1448,6 +1458,35 @@
     getScope: () => scope,
     branchReports: branchReportsView,
   });
+  const mom = isMom
+    ? window.createKIAMompreneurFeatures({
+        actor,
+        esc,
+        icon,
+        pill,
+        button,
+        viewHeading,
+        openDialog,
+        closeDialog,
+        toast,
+        render,
+        navigate,
+        progressBar,
+        getState: () => state,
+        reload: () => {
+          state = Store.read();
+          render();
+        },
+        addSession: (date) => sessionForm(undefined, date),
+        openCourse: (id) => {
+          if (!allowedCourse(course(id))) return;
+          currentCourse = id;
+          if (route() !== 'courses') history.pushState(null, '', '#courses');
+          render();
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        },
+      })
+    : null;
   function setMenu(open) {
     $('#sidebar').classList.toggle('open', open);
     $('#menu-toggle').setAttribute('aria-expanded', String(open));
@@ -1691,8 +1730,7 @@
               state = Store.seed();
               Store.save(state);
               Auth.logout();
-              location.replace('login.html');
-              return 'Preview data cleared.';
+              return { loggedOut: true };
             },
             'Reset Demo Data'
           );
