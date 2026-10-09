@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" fill="none">
+<defs>
+ <linearGradient id="blue" x1="100" y1="50" x2="310" y2="280" gradientUnits="userSpaceOnUse"><stop stop-color="#57b7ec"/><stop offset="1" stop-color="#0765ab"/></linearGradient>
+ <linearGradient id="gold" x1="140" y1="40" x2="300" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#ffe69a"/><stop offset=".6" stop-color="#f7c844"/><stop offset="1" stop-color="#dc8b21"/></linearGradient>
+ <linearGradient id="white" x1="150" y1="80" x2="280" y2="270" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#d5e5ef"/></linearGradient>
+ <linearGradient id="dark" x1="100" y1="90" x2="300" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#294a67"/><stop offset="1" stop-color="#123047"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#204462" flood-opacity=".13"/></filter>
+</defs>
+<ellipse cx="240" cy="154" rx="165" ry="135" fill="#e4eff8"/>
+<ellipse cx="239" cy="281" rx="126" ry="15" fill="#204b69" opacity=".09"/>
+<ellipse cx="240" cy="269" rx="94" ry="15" fill="#9db9c9"/><path d="M225 222q-19 29 15 57 34-28 15-57" fill="url(#gold)"/><path d="M234 224q-10 19 6 34 17-15 6-34" fill="#fff0b3"/>
+<g filter="url(#shadow)"><path d="M202 142c-35 17-46 46-39 88l43-26m71-62c35 17 46 46 39 88l-43-26" fill="url(#blue)"/>
+<path d="M240 34c-46 30-66 90-34 190h68c33-99 12-160-34-190Z" fill="url(#white)"/><path d="M240 34c-16 11-32 28-41 51h82c-10-23-25-40-41-51" fill="url(#blue)"/>
+<circle cx="240" cy="128" r="29" fill="#e1b650"/><circle cx="240" cy="128" r="22" fill="#225470"/><path d="M227 127c0-18 23-23 31-5" stroke="#8fd6e6" stroke-width="5" stroke-linecap="round"/>
+<path d="M211 199h58" stroke="#83abc1" stroke-width="5"/><path d="M240 178v44" stroke="#1175b7" stroke-width="12" stroke-linecap="round"/></g>
+<path d="M121 188c-39-66 6-119 61-115m122 126c40 14 75-6 76-47" stroke="#a8bfce" stroke-width="3" stroke-dasharray="5 9"/><path transform="translate(132 71) scale(0.62)" d="m0-28 8 18 20 2-15 14 4 21L0 17l-17 10 4-21-15-14 20-2Z" fill="#f6c543"/><path transform="translate(358 116) scale(0.4)" d="m0-28 8 18 20 2-15 14 4 21L0 17l-17 10 4-21-15-14 20-2Z" fill="#7cadc9"/>
+</svg>

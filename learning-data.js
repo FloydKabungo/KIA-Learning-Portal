@@ -90,15 +90,15 @@
     },
   ];
   const baseKey = 'kia-my-learning-preview-v1';
-  const profileId = () =>
-    window.KIAStorage?.read('kia-account-session-preview-v1')?.userId || 'learner-1';
+  // Local design progress belongs to the selected sample learner only.
+  const profileId = () => window.KIAPreview?.current()?.id || null;
   const state = () => window.KIAAdminData.read();
   const course = (id) => state().courses.find((c) => c.id === id);
   const assigned = (u, c) =>
     !!u &&
     !!c &&
     c.status === 'published' &&
-    u.courseIds.includes(c.id) &&
+    (u.courseIds || []).includes(c.id) &&
     (u.role === 'mompreneur' || c.audience === 'learners');
   function selectedCourseId() {
     const id = new URLSearchParams(location.search).get('course') || 'robotics';

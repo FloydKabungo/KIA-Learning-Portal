@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'"><title>Sign up | Kids Innovate Africa</title><link rel="icon" href="Assets/kia-mark.png"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="portal-refresh.css"><script src="portal-refresh.js" defer></script><script src="script.js" defer></script><script src="signup.js" defer></script></head><body><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="Kids Innovate Africa Learning Portal home">
+          <img src="Assets/kia-mark.png" alt="KIA Africa logo" class="brand-mark" />
+          <div class="brand-copy" aria-hidden="true">
+            <span>KIDS</span>
+            <span>INNOVATE</span>
+            <span>AFRICA</span>
+          </div>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          <a href="index.html">Home</a>
+          <a class="nav-login" href="login.html">Login</a>
+        <a class="active" aria-current="page" href="signup.html">Sign up</a></nav>
+
+        <button
+          class="menu-button"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+      <a class="active" aria-current="page" href="signup.html">Sign up</a></nav>
+    </header><main class="enrol-main" id="main-content"><div class="enrol-header"><span class="refresh-label">A place for curious minds · Ages 8–18</span><h1>Start their next<br>learning adventure.</h1><p>Parents and guardians, introduce us to your young innovators. Enrol siblings together and choose the club that suits your family.</p></div><ol class="enrol-steps" aria-label="Enrolment progress"><li aria-current="step"><b>1</b>Guardian</li><li><b>2</b>Learners</li><li><b>3</b>Review</li></ol><form id="enrol-form" class="enrol-panel" novalidate>
+<section data-step="0"><h2>Your details</h2><p>One parent or guardian can enrol more than one learner.</p><div class="enrol-fields"><label>Full name<input name="guardian-name" required maxlength="120" autocomplete="name"></label><label>Email address<input name="guardian-email" type="email" required maxlength="254" autocomplete="email"></label><label>Cellphone number<input name="guardian-phone" type="tel" required minlength="10" maxlength="20" pattern="[+0-9 ()-]{10,20}" autocomplete="tel"></label><label>Preferred club<select name="club" required><option value="">Choose a club</option><option>Parklands Club</option><option>Table View Club</option><option>Durbanville Club</option><option>Bellville Club</option><option>Please help me choose</option></select></label></div><p class="release-date">KIA will confirm your club placement.</p><div class="enrol-actions"><button type="button" class="primary" data-next>Next: learners →</button></div></section>
+<section data-step="1" hidden><h2>Meet your learners</h2><p>Add each child separately. Your guardian email can be linked to all of them.</p><div id="children"></div><button type="button" data-add-child>+ Add another learner</button><div class="enrol-actions"><button type="button" data-back>Back</button><button type="button" class="primary" data-next>Review details →</button></div></section>
+<section data-step="2" hidden><h2>Check your details</h2><p>Go back if you need to change anything.</p><div id="enrol-review" class="enrol-review"></div><label class="enrol-consent"><input type="checkbox" name="guardian-confirm" required><span>I confirm that I am the parent or authorised guardian of the learners listed.</span></label><label class="enrol-consent"><input type="checkbox" name="use-confirm" required><span>I have read the <a href="content-use.html" target="_blank" rel="noopener">content-use notice (opens a new tab)</a>. Course materials are for authorised learning.</span></label><div class="enrol-actions"><button type="button" data-back>Back</button><button type="submit" class="primary">Continue</button></div><p id="enrol-result" class="preview-note" role="status" tabindex="-1" hidden></p></section></form>
+<section id="contact" class="enrol-contact" aria-labelledby="contact-heading">
+  <p class="eyebrow">HERE TO HELP</p><h2 id="contact-heading">Contact KIA</h2>
+  <p>Questions about enrolment, your club or account access? Talk to our team.</p>
+  <div class="contact-grid">
+    <article class="contact-card"><span class="contact-kicker">Email</span><h3>Send a message</h3><a href="mailto:info@kidsinnovateafrica.com">info@kidsinnovateafrica.com</a></article>
+    <article class="contact-card"><span class="contact-kicker">Phone</span><h3>Call KIA</h3><a href="tel:+27215229739">021 522 9739</a></article>
+    <article class="contact-card"><span class="contact-kicker">Location</span><h3>Visit the centre</h3><p>Sandown Square Business Park<br>Cape Town, 7441</p></article>
+  </div>
+</section></main></body></html>

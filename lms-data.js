@@ -3,9 +3,9 @@
 (() => {
   'use strict';
   const Data = window.KIAAdminData,
-    Auth = window.KIAAccounts;
+    Preview = window.KIAPreview;
   const staff = (actor, state, branchId) =>
-    Auth.isCurrent(actor) &&
+    Preview.isCurrent(actor) &&
     ['admin', 'mompreneur'].includes(actor.role) &&
     (branchId === 'all'
       ? actor.role === 'admin'
@@ -32,110 +32,14 @@
       content: 'course',
       calendar: 'schedule',
       settings: 'settings',
-      branch: 'group',
+      branch: 'branch',
       award: 'learning',
     }[a.icon] ||
     'account';
-  const members = (state, group) =>
-    state.users.filter(
-      (u) => group.memberIds.includes(u.id) && u.role === 'learner' && u.branchId === group.branchId
-    );
-  function assignGroup(state, id, actor = Auth.current()) {
-    const g = state.groups.find((g) => g.id === id);
-    if (!g || !staff(actor, state, g.branchId))
-      throw new Error('This group is outside your club access.');
-    const courses = state.courses.filter(
-      (c) => g.courseIds.includes(c.id) && c.audience === 'learners' && c.status === 'published'
-    );
-    let count = 0;
-    members(state, g)
-      .filter((u) => u.status === 'active')
-      .forEach((u) =>
-        courses.forEach((c) => {
-          if (!u.courseIds.includes(c.id)) {
-            u.courseIds.push(c.id);
-            count++;
-          }
-        })
-      );
-    if (count)
-      record(state, {
-        title: 'Group courses assigned',
-        detail: `${g.name} · ${count} new course assignment${count === 1 ? '' : 's'}`,
-        actorId: actor.id,
-        actorName: actor.name,
-        branchId: g.branchId,
-        category: 'course',
-        icon: 'course',
-        route: 'groups',
-      });
-    return count;
-  }
-  function saveGroup(state, values, id, actor = Auth.current()) {
-    const old = state.groups.find((g) => g.id === id);
-    if (id && !old) throw new Error('Group not found.');
-    const branchId =
-      old?.branchId || (actor?.role === 'mompreneur' ? actor.branchId : values.branchId);
-    if (!staff(actor, state, branchId)) throw new Error('Choose a club you manage.');
-    const name = String(values.name || '').trim();
-    if (!name || name.length > 80) throw new Error('Enter a group name, up to 80 characters.');
-    if (
-      state.groups.some(
-        (g) => g.id !== id && g.branchId === branchId && g.name.toLowerCase() === name.toLowerCase()
-      )
-    )
-      throw new Error('This club already has a group with that name.');
-    if (String(values.description || '').trim().length > 500)
-      throw new Error('Keep the group description under 500 characters.');
-    const ids = [...new Set(values.memberIds || [])],
-      courses = [...new Set(values.courseIds || [])];
-    if (
-      ids.some(
-        (id) =>
-          !state.users.some((u) => u.id === id && u.role === 'learner' && u.branchId === branchId)
-      )
-    )
-      throw new Error('Every group member must be a learner in this club.');
-    if (
-      courses.some(
-        (id) =>
-          !state.courses.some(
-            (c) => c.id === id && c.audience === 'learners' && c.status === 'published'
-          )
-      )
-    )
-      throw new Error('Choose published learner courses.');
-    const next = {
-      id: old?.id || Data.id('group'),
-      name,
-      branchId,
-      description: String(values.description || '')
-        .trim()
-        .slice(0, 500),
-      memberIds: ids,
-      courseIds: courses,
-      autoEnroll: !!values.autoEnroll,
-      createdBy: old?.createdBy || actor.id,
-    };
-    if (old) Object.assign(old, next);
-    else state.groups.push(next);
-    record(state, {
-      title: old ? 'Learning group updated' : 'Learning group created',
-      detail: name,
-      actorId: actor.id,
-      actorName: actor.name,
-      branchId,
-      category: 'group',
-      icon: 'users',
-      route: 'groups',
-    });
-    const enrolled = next.autoEnroll ? assignGroup(state, next.id, actor) : 0;
-    return { group: next, enrolled };
-  }
   const canEditAnnouncement = (actor, state, item) =>
-    Auth.isCurrent(actor) &&
+    Preview.isCurrent(actor) &&
     (actor.role === 'admin' || (staff(actor, state, item.branchId) && item.createdBy === actor.id));
-  function saveAnnouncement(state, values, id, actor = Auth.current()) {
+  function saveAnnouncement(state, values, id, actor = Preview.current()) {
     const old = state.announcements.find((a) => a.id === id);
     if (id && (!old || !canEditAnnouncement(actor, state, old)))
       throw new Error('You can only edit announcements you manage.');
@@ -206,7 +110,7 @@
     (state.announcementReads[profile.id] || []).includes(`${item.id}:${item.revision}`);
   function markRead(id) {
     const state = Data.read(),
-      profile = Auth.current(),
+      profile = Preview.current(),
       item = visibleAnnouncements(state, profile).find((a) => a.id === id);
     if (!item) return;
     const read = new Set(state.announcementReads[profile.id] || []);
@@ -214,8 +118,8 @@
     state.announcementReads[profile.id] = [...read];
     Data.save(state);
   }
-  function setRules(state, mode, actor = Auth.current()) {
-    if (!Auth.isCurrent(actor) || actor.role !== 'admin')
+  function setRules(state, mode, actor = Preview.current()) {
+    if (!Preview.isCurrent(actor) || actor.role !== 'admin')
       throw new Error('KIA Admin manages learning rules.');
     if (!['free', 'sequential'].includes(mode)) throw new Error('Choose a lesson order.');
     state.courses.find((c) => c.id === 'robotics').lessonOrder = mode;
@@ -252,9 +156,6 @@
     staff,
     record,
     category,
-    members,
-    saveGroup,
-    assignGroup,
     saveAnnouncement,
     canEditAnnouncement,
     visibleAnnouncements,

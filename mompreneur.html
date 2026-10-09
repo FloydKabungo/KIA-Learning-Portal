@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" class="auth-loading">
+<html lang="en" class="preview-loading">
   <head>
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; frame-src https: blob:; connect-src https:; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; frame-src https: blob:; connect-src 'self' https:; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
     <script src="portal-security.js" defer></script>
 
@@ -16,21 +16,27 @@
     <link rel="stylesheet" href="admin.css" />
     <link rel="stylesheet" href="accounts.css" />
     <script src="portal-store.js" defer></script>
+    <script src="release-preview.js" defer></script>
     <script src="learning-data.js" defer></script>
     <script src="club-schedule-data.js" defer></script>
     <script src="admin-data.js" defer></script>
-    <script src="accounts.js" defer></script>
+    <script src="designer-context.js" defer></script>
     <script src="lms-data.js" defer></script>
     <script src="pdf-viewer.js" defer></script>
+    <script src="rich-content.js" defer></script>
     <script src="lesson-player.js" defer></script>
     <script src="admin-lms.js" defer></script>
+    <script src="lesson-studio.js" defer></script>
     <script src="admin-learning.js" defer></script>
     <script src="mompreneur.js" defer></script>
+    <script src="refresh-admin.js" defer></script>
     <script src="admin.js" defer></script>
     <link rel="stylesheet" href="lms-features.css" />
     <link rel="stylesheet" href="frontend-features.css" />
 
     <link rel="stylesheet" href="mompreneur-page.css" />
+      <link rel="stylesheet" href="portal-refresh.css" />
+    <script src="portal-refresh.js" defer></script>
   </head>
   <body data-portal="mompreneur">
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -39,7 +45,7 @@
         id="menu-toggle"
         class="icon-button menu-toggle"
         aria-label="Open navigation"
-        aria-controls="sidebar"
+        aria-controls="top-nav"
         aria-expanded="false"
       >
         <span data-icon="menu"></span>
@@ -69,31 +75,18 @@
         <div id="account-menu" class="account-menu" hidden>
           <strong>Mompreneur</strong><small>Your own club</small><a href="#users">My club members</a
           ><a href="#settings">My profile & settings</a
-          ><a href="login.html">Log out <span data-icon="exit"></span></a>
+          ><a href="login.html">Exit <span data-icon="exit"></span></a>
         </div>
       </div>
     </header>
-    <button id="nav-backdrop" class="nav-backdrop" aria-label="Close navigation" hidden></button>
     <div class="app-layout">
-      <aside id="sidebar" class="sidebar">
-        <p class="nav-caption">MOMPRENEUR</p>
-        <nav id="side-nav" class="side-nav" aria-label="Mompreneur navigation"></nav>
-        <div class="sidebar-bottom">
-          <a href="contact.html" class="support-link"
-            ><span data-icon="help"></span
-            ><span><strong>Need help?</strong><small>Contact KIA support</small></span
-            ><span data-icon="chevron"></span></a
-          ><a class="sidebar-logout" href="login.html"><span data-icon="exit"></span>Log out</a>
-        </div>
-      </aside>
       <main id="main-content" class="main-content" tabindex="-1">
         <div class="page-toolbar">
           <div class="breadcrumb">
             MY CLUB <span>/</span> <strong id="current-page-label">Dashboard</strong>
           </div>
           <div class="scope-controls">
-            <span class="demo-pill">Demo data</span
-            ><label for="branch-filter" class="sr-only">Filter by branch</label
+            <label for="branch-filter" class="sr-only">Filter by branch</label
             ><select id="branch-filter">
               <option value="all">All branches</option>
             </select>
@@ -101,7 +94,7 @@
         </div>
         <div id="admin-view"></div>
         <noscript
-          ><p>This interactive preview needs JavaScript enabled in your browser.</p></noscript
+          ><p>Enable JavaScript to use the portal.</p></noscript
         >
         <footer class="page-footer">
           <span>© 2026 Kids Innovate Africa</span><span>One community. Brighter futures.</span>

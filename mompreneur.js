@@ -3,7 +3,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
   'use strict';
   const { actor, esc, icon, pill, button, viewHeading, openDialog, toast, navigate } = ctx;
   const Learning = window.KIALearning,
-    Auth = window.KIAAccounts,
+    Preview = window.KIAPreview,
     LMS = window.KIALMS;
   const state = ctx.getState;
   const club = () => state().branches.find((b) => b.id === actor.branchId);
@@ -67,7 +67,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
   let selectedDate = today(),
     month = selectedDate.slice(0, 7);
   function savePreferences() {
-    if (!Auth.isCurrent(actor) || !Auth.checkPage()) return false;
+    if (!Preview.isCurrent(actor) || !Preview.checkPage()) return false;
     if (!window.KIAStorage.write(key, preferences)) {
       toast('Your preferences could not be saved in this tab.');
       return false;
@@ -81,14 +81,13 @@ window.createKIAMompreneurFeatures = (ctx) => {
         ? ['Setup pending', 'amber']
         : ['Ready', 'green'];
   function card(u) {
-    const p = progress(u),
-      enrolled = state().courses.filter((c) => u.courseIds.includes(c.id));
-    return `<article class="panel mom-member-card"><div class="mom-member-top">${avatar(u)}<div><h2>${esc(u.name)}</h2><p>@${esc(u.username)}</p></div>${pill(...access(u))}</div><div class="mom-member-progress"><div><span>Robotics progress</span><strong>${p.completed.size} of ${p.total} lessons</strong></div>${ring(p)}</div><div class="mom-member-meta">${icon('course')} ${enrolled.length} assigned course${enrolled.length === 1 ? '' : 's'}<span>${icon('branch')} ${esc(club()?.name || 'My club')}</span></div><div class="mom-member-actions">${button('View Progress', 'view-user', 'report', true, u.id)}${button('Edit Profile', 'edit-user', 'edit', true, u.id)}${button('Invitation', 'invite-user', 'mail', true, u.id)}</div></article>`;
+    const p = progress(u);
+    return `<article class="person-card"><button class="person-open" data-action="view-user" data-id="${esc(u.id)}" aria-label="View ${esc(u.name)}"><span class="person-circle">${esc(initial(u.name))}</span><strong>${esc(u.name)}</strong><small>@${esc(u.username)}</small></button><div class="person-summary"><strong>${p.completed.size} of ${p.total} lessons complete</strong><span>${esc(club()?.name || 'Your club')} · ${p.percent}%</span></div><div class="person-actions">${button('View profile', 'view-user', 'eye', true, u.id)}${button('Edit', 'edit-user', 'edit', true, u.id)}</div></article>`;
   }
   function memberRows() {
     const list = members().filter(
       (u) =>
-        `${u.name} ${u.username} ${Auth.emailOf(u)}`
+        `${u.name} ${u.username} ${Preview.emailOf(u)}`
           .toLowerCase()
           .includes(memberSearch.toLowerCase()) &&
         (memberStatus === 'all' ||
@@ -99,7 +98,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
     const pages = Math.max(1, Math.ceil(list.length / 9));
     memberPage = Math.min(memberPage, pages);
     const subset = list.slice((memberPage - 1) * 9, memberPage * 9);
-    return `<div class="mom-results-summary"><strong>${list.length} member${list.length === 1 ? '' : 's'}</strong><span>${esc(club()?.name || '')} · your club only</span></div>${subset.length ? `<div class="mom-members-grid">${subset.map(card).join('')}</div>` : empty('No members found', 'Try another search or add your first learner.', button('Add Learner', 'add-user', 'users'))}<div class="mom-pagination"><button class="button secondary" data-mom-action="member-prev" ${memberPage === 1 ? 'disabled' : ''}>Previous</button><span>Page ${memberPage} of ${pages}</span><button class="button secondary" data-mom-action="member-next" ${memberPage === pages ? 'disabled' : ''}>Next</button></div>`;
+    return `<div class="mom-results-summary"><strong>${list.length} member${list.length === 1 ? '' : 's'}</strong><span>${esc(club()?.name || '')} · your club only</span></div>${subset.length ? `<div class="people-grid">${subset.map(card).join('')}</div>` : empty('No members found', 'Try another search or add your first learner.', button('Add Learner', 'add-user', 'users'))}<div class="mom-pagination"><button class="button secondary" data-mom-action="member-prev" ${memberPage === 1 ? 'disabled' : ''}>Previous</button><span>Page ${memberPage} of ${pages}</span><button class="button secondary" data-mom-action="member-next" ${memberPage === pages ? 'disabled' : ''}>Next</button></div>`;
   }
   function membersView() {
     return (
@@ -109,7 +108,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
         button('Assign Course', 'assign-course', 'course', true) +
           button('Add Learner', 'add-user', 'users')
       ) +
-      `<div class="mom-inline-note">${icon('shield')}<p>New learners receive Robotics automatically. Invitations use the guardian’s email; siblings keep separate usernames and passwords.</p><a href="#invitations">View invitations ${icon('arrow')}</a></div><section class="mom-filters"><label class="mom-search">${icon('search')}<span class="sr-only">Search club members</span><input id="mom-member-search" type="search" placeholder="Search name, username or guardian email" value="${esc(memberSearch)}"/></label><label><span>Account status</span><select id="mom-member-status">${[
+      `<div class="mom-inline-note">${icon('shield')}<p>New learners receive Robotics automatically. Invitations use the guardian’s email; siblings have separate learner profiles linked to their guardian.</p><a href="#invitations">View invitations ${icon('arrow')}</a></div><section class="mom-filters"><label class="mom-search">${icon('search')}<span class="sr-only">Search club members</span><input id="mom-member-search" type="search" placeholder="Search name, username or guardian email" value="${esc(memberSearch)}"/></label><label><span>Account status</span><select id="mom-member-status">${[
         ['all', 'All members'],
         ['active', 'Active'],
         ['pending', 'Setup pending'],
@@ -121,7 +120,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
         )
         .join(
           ''
-        )}</select></label><a class="button secondary" href="#groups">${icon('users')}Learning Groups</a></section><div id="mom-member-results">${memberRows()}</div>`
+        )}</select></label></section><div id="mom-member-results">${memberRows()}</div>`
     );
   }
   function featured() {
@@ -183,7 +182,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
       ],
       ['Upcoming Sessions', next.length, 'on your club calendar', 'calendar', 'purple', 'sessions'],
     ];
-    return `<section class="mom-hero"><div class="mom-hero-copy"><p class="eyebrow">WELCOME BACK, ${esc(actor.name.split(' ')[0])}</p><h1>Support. Guide.<br/>Build their future.</h1><p>Help your club grow. Follow your learners’ progress,<br class="mom-desktop-break"/> prepare inspiring lessons and celebrate every discovery.</p></div><div class="mom-hero-motto" aria-hidden="true">${icon('heart')}Stronger clubs.<br/>Brighter<br/>futures.<span></span></div><div class="mom-hero-art" role="img" aria-label="An adult supporting a smiling young learner at a laptop"></div></section><div class="mom-dashboard"><div class="mom-stats">${stats.map(([label, value, note, symbol, tone, action]) => `<button class="mom-stat mom-tone-${tone}" data-mom-action="stat-${action}"><span class="mom-stat-icon">${icon(symbol)}</span><span><strong>${label}</strong><b>${value}</b><small>${note}</small></span>${icon('chevron')}</button>`).join('')}</div><section class="panel mom-members-panel">${header('My Club Members', 'users', 'users')}<div id="mom-featured">${featured()}</div></section><section class="panel mom-activity-panel">${header('Recent Activity', 'clock', 'reports')}<div class="mom-activity-list">${activity.map((a, i) => `<a href="#${['users', 'courses', 'schedules', 'reports', 'invitations', 'announcements', 'groups'].includes(a.route) ? a.route : 'reports'}" class="mom-activity"><span class="mom-activity-symbol mom-tone-${['green', 'blue', 'purple', 'amber'][i % 4]}">${icon(a.icon)}</span><span><strong>${esc(a.title)}</strong><small>${esc(a.detail)}</small></span><time datetime="${esc(a.date)}">${date(a.date)}</time></a>`).join('') || empty('No club activity yet', 'Updates will appear as your club starts learning.')}</div></section><section class="panel mom-training-panel">${header('My Training & Courses', 'course', 'courses')}<div class="mom-training-grid">${trainingCards()}</div><p class="mom-training-footnote">${icon('shield')}Complete onboarding to unlock your facilitation lessons. Robotics lets you explore the course your club follows.</p></section><aside class="mom-dashboard-rail"><section class="panel mom-quick-panel">${header('Quick Actions', 'users')}<div class="mom-quick-grid"><button data-action="add-user">${icon('users')}Add Learner</button><button data-action="assign-course">${icon('course')}Assign Course</button><button data-action="add-session">${icon('calendar')}Add Session</button><a href="#reports" data-lms-report-link="learners">${icon('download')}View Reports</a></div></section><section class="panel mom-upcoming-panel">${header('Upcoming Sessions', 'calendar', 'schedules')}<div>${sessionRows(next.slice(0, 3)) || empty('No upcoming sessions', 'Plan your next club class.', button('Add Session', 'add-session', 'calendar'))}</div></section><section class="panel mom-resources-panel">${header('Learning Resources', 'content', 'content')}<button class="mom-resource-link" data-mom-action="training" data-id="onboarding"><span class="mom-resource-icon mom-tone-blue">${icon('course')}</span><span><strong>Mompreneur Onboarding</strong><small>Start here and get to know your portal</small></span>${icon('chevron')}</button><a class="mom-resource-link" href="#content"><span class="mom-resource-icon mom-tone-amber">${icon('robot')}</span><span><strong>Robotics Resources</strong><small>Materials for your club’s learning</small></span>${icon('chevron')}</a><a class="mom-resource-link" href="#schedules"><span class="mom-resource-icon mom-tone-green">${icon('calendar')}</span><span><strong>Club Calendar</strong><small>Class sessions and schedule changes</small></span>${icon('chevron')}</a><button class="mom-resource-link" data-mom-action="help"><span class="mom-resource-icon mom-tone-purple">${icon('help')}</span><span><strong>Getting Started</strong><small>Accounts, learning and your club</small></span>${icon('chevron')}</button></section></aside></div>`;
+    return `<section class="mom-hero"><div class="mom-hero-copy"><p class="eyebrow">WELCOME BACK, ${esc(actor.name.split(' ')[0])}</p><h1>Support. Guide.<br/>Build their future.</h1><p>Help your club grow. Follow your learners’ progress,<br class="mom-desktop-break"/> prepare inspiring lessons and celebrate every discovery.</p></div><div class="mom-hero-motto" aria-hidden="true">${icon('heart')}Stronger clubs.<br/>Brighter<br/>futures.<span></span></div><div class="mom-hero-art" role="img" aria-label="An adult supporting a smiling young learner at a laptop"></div></section><div class="mom-dashboard"><div class="mom-stats">${stats.map(([label, value, note, symbol, tone, action]) => `<button class="mom-stat mom-tone-${tone}" data-mom-action="stat-${action}"><span class="mom-stat-icon">${icon(symbol)}</span><span><strong>${label}</strong><b>${value}</b><small>${note}</small></span>${icon('chevron')}</button>`).join('')}</div><section class="panel mom-members-panel">${header('My Club Members', 'users', 'users')}<div id="mom-featured">${featured()}</div></section><section class="panel mom-activity-panel">${header('Recent Activity', 'clock', 'reports')}<div class="mom-activity-list">${activity.map((a, i) => `<a href="#${['users', 'courses', 'schedules', 'reports', 'invitations', 'announcements'].includes(a.route) ? a.route : 'reports'}" class="mom-activity"><span class="mom-activity-symbol mom-tone-${['green', 'blue', 'purple', 'amber'][i % 4]}">${icon(a.icon)}</span><span><strong>${esc(a.title)}</strong><small>${esc(a.detail)}</small></span><time datetime="${esc(a.date)}">${date(a.date)}</time></a>`).join('') || empty('No club activity yet', 'Updates will appear as your club starts learning.')}</div></section><section class="panel mom-training-panel">${header('My Training & Courses', 'course', 'courses')}<div class="mom-training-grid">${trainingCards()}</div><p class="mom-training-footnote">${icon('shield')}Complete onboarding to unlock your facilitation lessons. Robotics lets you explore the course your club follows.</p></section><aside class="mom-dashboard-rail"><section class="panel mom-quick-panel">${header('Quick Actions', 'users')}<div class="mom-quick-grid"><button data-action="add-user">${icon('users')}Add Learner</button><button data-action="assign-course">${icon('course')}Assign Course</button><button data-action="add-session">${icon('calendar')}Add Session</button><a href="#reports" data-lms-report-link="learners">${icon('download')}View Reports</a></div></section><section class="panel mom-upcoming-panel">${header('Upcoming Sessions', 'calendar', 'schedules')}<div>${sessionRows(next.slice(0, 3)) || empty('No upcoming sessions', 'Plan your next club class.', button('Add Session', 'add-session', 'calendar'))}</div></section><section class="panel mom-resources-panel">${header('Learning Resources', 'content', 'content')}<button class="mom-resource-link" data-mom-action="training" data-id="onboarding"><span class="mom-resource-icon mom-tone-blue">${icon('course')}</span><span><strong>Mompreneur Onboarding</strong><small>Start here and get to know your portal</small></span>${icon('chevron')}</button><a class="mom-resource-link" href="#content"><span class="mom-resource-icon mom-tone-amber">${icon('robot')}</span><span><strong>Robotics Resources</strong><small>Materials for your club’s learning</small></span>${icon('chevron')}</a><a class="mom-resource-link" href="#schedules"><span class="mom-resource-icon mom-tone-green">${icon('calendar')}</span><span><strong>Club Calendar</strong><small>Class sessions and schedule changes</small></span>${icon('chevron')}</a><button class="mom-resource-link" data-mom-action="help"><span class="mom-resource-icon mom-tone-purple">${icon('help')}</span><span><strong>Getting Started</strong><small>Accounts, learning and your club</small></span>${icon('chevron')}</button></section></aside></div>`;
   }
   function filteredProgress() {
     if (!courses().some((c) => c.id === progressCourse))
@@ -230,7 +229,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
       viewHeading(
         'Learner Progress',
         'Know what each club member has completed and where they need support.',
-        `<button class="button secondary" data-mom-action="export-progress">${icon('download')}Export Progress</button>`
+        ''
       ) +
       `<section class="mom-filters"><label class="mom-search">${icon('search')}<span class="sr-only">Search learner progress</span><input id="mom-progress-search" type="search" placeholder="Search name or username" value="${esc(progressSearch)}"/></label><label><span>Course</span><select id="mom-progress-course">${courses()
         .map(
@@ -306,7 +305,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
           .sort()
           .join(','),
         title: `${pending.length} learner account${pending.length === 1 ? '' : 's'} awaiting setup`,
-        body: 'Review the invitation previews for their parents or guardians.',
+        body: 'View guardian invitations.',
         symbol: 'users',
         route: 'invitations',
       });
@@ -397,7 +396,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
         )
         .join(
           ''
-        )}<p class="mom-small-note">Preferences are saved for your account in this preview tab.</p></section></div></div>`
+        )}<p class="mom-small-note">Preferences saved.</p></section></div></div>`
     );
   }
   function markRead(ids) {
@@ -412,12 +411,12 @@ window.createKIAMompreneurFeatures = (ctx) => {
   function help() {
     openDialog(
       'Welcome to your club',
-      `<div class="mom-help"><p>Everything you need to guide your club’s next discovery.</p><ol><li><strong>Complete your onboarding.</strong><p>Open My Training. Completing every onboarding lesson unlocks your facilitation course.</p></li><li><strong>Welcome your learners.</strong><p>Add each learner in My Club Members using their guardian’s contact details. Robotics is assigned automatically. Siblings can share a guardian email and have separate usernames and passwords.</p></li><li><strong>Plan your club sessions.</strong><p>Add dates, times and class notes in Club Schedule. Your club’s learners see those sessions on their schedules.</p></li><li><strong>Follow their progress.</strong><p>Open Learner Progress for completed and outstanding lessons and quiz results. Reports can be filtered and exported for your club.</p></li></ol><a class="button" href="#courses" data-mom-action="help-training">${icon('course')}Go to My Training</a></div>`,
+      `<div class="mom-help"><p>Everything you need to guide your club’s next discovery.</p><ol><li><strong>Complete your onboarding.</strong><p>Open My Training. Completing every onboarding lesson unlocks your facilitation course.</p></li><li><strong>Welcome your learners.</strong><p>Use My Club Members to view your learners and their guardian contact details.</p></li><li><strong>Plan your club sessions.</strong><p>Add dates, times and class notes in Club Schedule. Your club’s learners see those sessions on their schedules.</p></li><li><strong>Follow their progress.</strong><p>Open Learner Progress for completed and outstanding lessons and quiz results. Reports can be filtered and exported for your club.</p></li></ol><a class="button" href="#courses" data-mom-action="help-training">${icon('course')}Go to My Training</a></div>`,
       'MOMPRENEUR GUIDE'
     );
   }
   document.addEventListener('input', (event) => {
-    if (!Auth.checkPage()) return;
+    if (!Preview.checkPage()) return;
     if (event.target.id === 'mom-member-search') {
       memberSearch = event.target.value;
       memberPage = 1;
@@ -429,7 +428,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
     }
   });
   document.addEventListener('change', (event) => {
-    if (!Auth.checkPage()) return;
+    if (!Preview.checkPage()) return;
     if (event.target.id === 'mom-member-status') {
       memberStatus = event.target.value;
       memberPage = 1;
@@ -455,7 +454,7 @@ window.createKIAMompreneurFeatures = (ctx) => {
   });
   document.addEventListener('click', (event) => {
     const control = event.target.closest('[data-mom-action]');
-    if (!control || !Auth.checkPage() || !Auth.isCurrent(actor)) return;
+    if (!control || !Preview.checkPage() || !Preview.isCurrent(actor)) return;
     const action = control.dataset.momAction,
       id = control.dataset.id;
     if (action === 'feature-member') {

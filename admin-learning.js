@@ -39,7 +39,7 @@ window.createKIACourseFeatures = (ctx) => {
       return (
         `<button class="text-link" data-action="back-courses">← My training</button>` +
         viewHeading(esc(c.title), esc(c.description)) +
-        `<section class="panel training-progress">${progressBar(p.percent)}<p>${p.completed.size} of ${p.total} lessons completed</p></section><div class="module-list">${c.modules.map((m, mi) => `<details class="panel module-card" ${mi === 0 ? 'open' : ''}><summary><span class="module-number">${mi + 1}</span><div><strong>${esc(m.title)}</strong><small>${m.lessons.filter((l) => p.completed.has(l.id)).length} of ${m.lessons.length} lessons completed</small></div>${icon('down')}</summary><div class="lesson-list">${m.lessons.map((l) => `<div class="lesson-item">${icon(p.completed.has(l.id) ? 'check' : l.type === 'Video' ? 'play' : 'file')}<div><strong>${esc(l.title)}</strong><small>${esc(l.type)} · ${l.duration} min · ${p.completed.has(l.id) ? 'Completed' : 'Outstanding'}</small></div>${button(p.completed.has(l.id) ? 'Review' : 'Open', 'view-training-lesson', 'arrow', true, l.id)}</div>`).join('')}</div></details>`).join('') || '<p class="media-status">KIA is preparing the modules for this course.</p>'}</div>`
+        `<section class="panel training-progress">${progressBar(p.percent)}<p>${p.completed.size} of ${p.total} lessons completed</p></section><div class="module-list">${c.modules.map((m, mi) => `<details class="panel module-card" ${mi === 0 ? 'open' : ''}><summary><span class="module-number">${mi + 1}</span><div><strong>${esc(m.title)}</strong><small>${m.lessons.filter((l) => p.completed.has(l.id)).length} of ${m.lessons.length} lessons completed</small></div>${icon('down')}</summary><div class="lesson-list">${m.lessons.map((l) => `<div class="lesson-item">${icon(p.completed.has(l.id) ? 'check' : l.type === 'Video' ? 'play' : 'file')}<div><strong>${esc(l.title)}</strong><small>${esc(l.type)} · ${l.duration} min · ${p.completed.has(l.id) ? 'Completed' : 'Outstanding'}</small></div>${window.KIARelease.lessonStatus(l.id,c.id).open ? button(p.completed.has(l.id) ? 'Review' : 'Open', 'view-training-lesson', 'arrow', true, l.id) : `<span class="release-state is-locked">${esc(window.KIARelease.lessonStatus(l.id,c.id).message)}</span>`}</div>`).join('')}</div></details>`).join('') || '<p class="media-status">KIA is preparing the modules for this course.</p>'}</div>`
       );
     }
     return (
@@ -64,6 +64,8 @@ window.createKIACourseFeatures = (ctx) => {
     }
     const lesson = all(c).find((l) => l.id === id);
     if (!lesson) return;
+    const release = window.KIARelease.lessonStatus(id, courseId);
+    if (!release.open) { toast(release.message); return; }
     const p = progress(c);
     openDialog(
       lesson.title,
@@ -86,6 +88,8 @@ window.createKIACourseFeatures = (ctx) => {
       );
   }
   function completeTraining(courseId, id) {
+    const release = window.KIARelease.lessonStatus(id, courseId);
+    if (!release.open) { toast(release.message); return; }
     Learning.completeLesson(courseId, id);
     reload();
     trainingLesson(courseId, id);
@@ -165,9 +169,10 @@ window.createKIACourseFeatures = (ctx) => {
     if (!m || actor.role !== 'admin') return;
     const old = m.lessons.find((l) => l.id === lessonId),
       l = old || { title: '', type: 'Text', duration: 10, body: '' };
-    let readQuestions;
+    let readQuestions, readStudio, richEditor;
     const element = form(
       old ? 'Edit Lesson' : 'Add Lesson',
+      `<section class="lesson-studio"><div class="studio-preview"><span aria-hidden="true">▷</span><p>Your lesson preview</p></div><div class="studio-tools"><button type="button" data-studio-focus="title">Add title</button><button type="button" data-studio-focus="studioVideo">Add video</button><button type="button" data-studio-focus="studioCaptions">Add subtitles</button><button type="button" data-studio-focus="studioImage">Add image / GIF</button><button type="button" data-studio-paragraph>Add paragraph</button><button type="button" data-studio-button>Add button</button><button type="button" data-studio-video-source>Add video source</button><button type="button" data-studio-embed>Embed content</button><button type="button" data-studio-quiz>Add quiz</button><button type="button" data-studio-preview>Preview</button></div><div class="studio-file"><label>Video file<input name="studioVideo" type="file" accept="video/mp4,video/webm"></label><label>Image or GIF<input name="studioImage" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label><label>Subtitles (.vtt)<input name="studioCaptions" type="file" accept=".vtt,text/vtt"></label></div><p class="studio-status" role="status">Files stay in this browser preview. Up to 25 MB per media file.</p><div class="studio-content-preview lesson-rich-text" hidden></div></section>` +
       input('title', 'Lesson title', l.title) +
         select(
           'type',
@@ -190,9 +195,14 @@ window.createKIACourseFeatures = (ctx) => {
         ) +
         input('url', 'Media or embed link (optional)', l.url || '', 'url', 'maxlength="2000"') +
         textarea('body', 'Lesson text / notes', l.body || '') +
+        textarea('transcript', 'Video transcript / text alternative', l.transcript || '') +
+        textarea('subtitles', 'Subtitles (WebVTT)', l.subtitles || '') +
+        input('imageAlt', 'Image description (for screen readers)', l.imageAlt || '', 'text', 'maxlength="500"') +
         '<p class="field full subtle">Choose a resource from Content or paste a media link. Attached resources take priority over links. For YouTube or Vimeo, paste the video link.</p><div class="quiz-builder"></div>',
-      (data) => {
+      async (data) => {
         if (data.url) Player.safeURL(data.url);
+        const accessibleMedia = await readStudio(data);
+        const richText = richEditor.read();
         if (
           !['Video', 'Images', 'GIF', 'Text', 'Embedded', 'Quiz'].includes(data.type) ||
           !Number.isInteger(Number(data.duration)) ||
@@ -211,11 +221,21 @@ window.createKIACourseFeatures = (ctx) => {
           title: data.title.trim(),
           type: data.type,
           duration: Number(data.duration),
-          body: data.body.trim(),
+          ...richText,
           url: data.url.trim(),
           resourceId: data.resourceId || '',
           questions: data.type === 'Quiz' ? readQuestions() : [],
+          ...accessibleMedia,
         };
+        const file = element.elements.studioVideo.files[0] || element.elements.studioImage.files[0];
+        if (file) {
+          const type = file.type.startsWith('video/') ? 'Video' : file.type === 'image/gif' ? 'GIF' : 'Image';
+          await window.KIASecurity.validateFile(file, type);
+          const resourceId = window.KIAAdminData.id('content');
+          await window.KIAAdminData.putFile(resourceId, file);
+          state.content.unshift({id:resourceId,title:next.title,type,courseId:c.id,source:'file',filename:file.name,mime:file.type,size:file.size,createdAt:new Date().toISOString()});
+          next.resourceId=resourceId;
+        }
         if (old) Object.assign(old, next);
         else m.lessons.push(next);
         log(
@@ -225,11 +245,13 @@ window.createKIACourseFeatures = (ctx) => {
           null,
           'courses'
         );
-        return 'Lesson saved. Its content is available in the assigned course.';
+        return 'Lesson saved. Release dates control when learners see it.';
       },
       old ? 'Save Lesson' : 'Add Lesson'
     );
     readQuestions = setupBuilder(element, l.questions);
+    richEditor = window.KIARichContent.mount(element.elements.body, {html:l.bodyHtml});
+    readStudio = window.mountKIALessonStudio(element, l, richEditor, c.id);
     const toggle = () => {
       const host = element.querySelector('.quiz-builder'),
         active = element.elements.type.value === 'Quiz';
@@ -264,7 +286,7 @@ window.createKIACourseFeatures = (ctx) => {
     return (m.quizzes || [])
       .map(
         (q) =>
-          `<div class="lesson-item">${icon('course')}<div><strong>${esc(q.title)}</strong><small>Quiz · ${q.questions.length} questions${q.sample ? ' · Sample' : ''}</small></div><button class="text-link" data-action="edit-module-quiz" data-module="${esc(m.id)}" data-id="${esc(q.id)}">Edit ${icon('edit')}</button></div>`
+          `<div class="lesson-item">${icon('course')}<div><strong>${esc(q.title)}</strong><small>Quiz · ${q.questions.length} questions</small></div><button class="text-link" data-action="edit-module-quiz" data-module="${esc(m.id)}" data-id="${esc(q.id)}">Edit ${icon('edit')}</button></div>`
       )
       .join('');
   }

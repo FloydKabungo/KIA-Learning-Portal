@@ -46,51 +46,24 @@
   gap: 16px;
   margin-bottom: 18px;
 }
-.lms-group-grid,
 .lms-notice-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
-.lms-group-card,
 .lms-notice-card {
   padding: 24px;
   min-width: 0;
 }
-.lms-group-card .eyebrow {
-  margin-top: 19px;
-  font-size: 8px;
-  color: #668ba9;
-}
-.lms-group-card h2,
 .lms-notice-card h2 {
   margin: 6px 0 9px;
   font-size: 20px;
   letter-spacing: -0.5px;
   overflow-wrap: anywhere;
 }
-.lms-group-card > .subtle {
-  min-height: 37px;
-}
-.lms-group-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 9px;
-  padding: 22px 0 16px;
-}
-.lms-group-stats strong,
-.lms-group-stats small {
-  display: block;
-}
-.lms-group-stats strong {
-  font-size: 25px;
-  color: #17466f;
-}
-.lms-group-stats small {
-  font-size: 9px;
-  color: #7890a5;
-  margin-top: 3px;
-}
+
+
+
 .lms-course-list {
   font-size: 11px;
   color: #5e7e9b;
@@ -402,7 +375,6 @@
   .lms-dashboard-links small {
     font-size: 9px;
   }
-  .lms-group-card,
   .lms-notice-card {
     padding: 20px;
   }
@@ -414,7 +386,6 @@
   .lms-dashboard-links a {
     padding: 14px 17px;
   }
-  .lms-group-grid,
   .lms-notice-grid {
     grid-template-columns: 1fr;
     gap: 14px;
@@ -427,7 +398,6 @@
     max-width: none;
     flex: 1 1 100%;
   }
-  .lms-group-card h2,
   .lms-notice-card h2 {
     font-size: 20px;
   }
@@ -471,9 +441,7 @@
   .lms-card-buttons {
     margin-top: 15px;
   }
-  .lms-group-stats {
-    padding-top: 17px;
-  }
+  
   .learning-rule-note {
     padding: 12px;
     font-size: 10px;

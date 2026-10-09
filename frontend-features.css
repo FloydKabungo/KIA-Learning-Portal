@@ -244,7 +244,7 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
-.auth-loading body {
+.preview-loading body {
   visibility: hidden;
 }
 .pdf-viewer {

@@ -1,6 +1,7 @@
 /* Read-only learner calendar using the club's shared sample sessions. */
-(() => {
+(async () => {
   'use strict';
+  await window.KIALearnerReady;
   if (!window.KIALearner) return;
   const esc = window.KIASecurity.escapeHTML;
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,7 +51,7 @@
         const isSelected = iso === selectedDate;
         const isCurrentMonth = date.getUTCMonth() === displayedMonth;
         const label = `${formatDate(iso)}: ${event ? `${esc(event.title)}, ${timeRange(event)} SAST${event.previousStart ? ', time updated' : ''}` : 'No club session scheduled'}`;
-        cells += `<td><button type="button" class="calendar-day ${isCurrentMonth ? '' : 'other-month'}" data-date="${iso}" aria-label="${esc(label)}" aria-pressed="${isSelected}" tabindex="${iso === focusDate ? '0' : '-1'}"><span class="day-number" aria-hidden="true">${date.getUTCDate()}</span>${event ? `<span class="day-event ${event.previousStart ? 'changed' : ''}" aria-hidden="true"><strong>${event.previousStart ? 'Time updated' : esc(event.title)}</strong><small>${esc(event.start)}–${esc(event.end)}</small></span><span class="event-dot ${event.previousStart ? 'changed' : ''}" aria-hidden="true"></span>` : ''}</button></td>`;
+        cells += `<td><button type="button" class="calendar-day ${isCurrentMonth ? '' : 'other-month'}" data-date="${iso}" aria-label="${esc(label)}" aria-pressed="${isSelected}" tabindex="${iso === focusDate ? '0' : '-1'}"><span class="day-number" aria-hidden="true">${date.getUTCDate()}</span>${event ? `<span class="day-event ${event.previousStart ? 'changed' : ''}" aria-hidden="true"><strong>${icon(event.previousStart ? 'clock' : 'robot')}</strong><small>${esc(event.start)}–${esc(event.end)}</small></span><span class="event-dot ${event.previousStart ? 'changed' : ''}" aria-hidden="true"></span>` : ''}</button></td>`;
       }
       rows.push(`<tr>${cells}</tr>`);
     }
@@ -63,23 +64,23 @@
     });
     $('#month-session-list').innerHTML = visibleSessions.length
       ? `<div class="calendar-list"><div class="agenda-list">${visibleSessions.map(agendaRow).join('')}</div></div>`
-      : `<div class="calendar-empty">${icon('calendar')}<h3>No sessions in ${monthName()}</h3><p>Class times will appear here when your Mompreneur adds them to your club’s schedule.</p><button class="button secondary" data-show-next ${nextSession ? '' : 'hidden'}>Back to next session ${icon('arrow')}</button></div>`;
+      : `<div class="calendar-empty">${icon('calendar')}<h3>No sessions in ${monthName()}</h3><p>Check another month.</p><button class="button secondary" data-show-next ${nextSession ? '' : 'hidden'}>Next class ${icon('arrow')}</button></div>`;
   }
   function renderSelectedSession() {
     const session = sessionOn(selectedDate);
     $('#session-card-title').textContent = session
       ? session.id === nextSession?.id
-        ? 'Next club session'
+        ? 'Next class'
         : 'Session details'
       : 'Your selected date';
     $('.schedule-card-heading .live-dot').hidden = !session;
     if (!session) {
       $('#selected-session').innerHTML =
-        `<div class="empty-selected"><p><strong>${formatDate(selectedDate)}</strong><br>No club session is scheduled for this date.</p><button class="button secondary" data-show-next ${nextSession ? '' : 'hidden'}>Show next club session ${icon('arrow')}</button></div>`;
+        `<div class="empty-selected"><p><strong>${formatDate(selectedDate)}</strong><br>No class today.</p><button class="button secondary" data-show-next ${nextSession ? '' : 'hidden'}>Next class ${icon('arrow')}</button></div>`;
       return;
     }
     $('#selected-session').innerHTML =
-      `<div class="selected-summary">${dateTile(session.date, true)}<div><span class="session-type">IN PERSON</span><h3>${esc(session.title)}</h3>${session.previousStart ? `<span class="session-changed-label">${icon('clock')}Time updated</span>` : ''}</div></div><div class="selected-details"><p>${icon('calendar')}${formatDate(session.date)}</p><p>${icon('clock')}${timeRange(session)} <span class="time-zone">SAST</span></p><p>${icon('pin')}${esc(session.location)}</p></div><p class="selected-note">${esc(session.note)}</p><button class="button primary session-details-button" data-details="${esc(session.id)}">View session details ${icon('arrow')}</button><p class="managed-note">Scheduled by your Mompreneur</p>`;
+      `<div class="selected-summary">${dateTile(session.date, true)}<div><span class="session-type">IN PERSON</span><h3>${esc(session.title)}</h3>${session.previousStart ? `<span class="session-changed-label">${icon('clock')}Time updated</span>` : ''}</div></div><div class="selected-details"><p>${icon('calendar')}${formatDate(session.date)}</p><p>${icon('clock')}${timeRange(session)} <span class="time-zone">SAST</span></p><p>${icon('pin')}${esc(session.location)}</p></div><button class="button primary session-details-button" data-details="${esc(session.id)}">Details ${icon('arrow')}</button>`;
   }
   function selectDate(iso, reveal = false) {
     selectedDate = iso;
@@ -115,7 +116,7 @@
     dialogTrigger = document.activeElement;
     $('#session-dialog-title').textContent = session.title;
     $('#session-dialog-content').innerHTML =
-      `<div class="dialog-session-details"><p>${icon('calendar')}${formatDate(session.date)}</p><p>${icon('clock')}${timeRange(session)} SAST</p><p>${icon('pin')}${esc(session.location)} · In person</p></div>${session.previousStart ? `<div class="changed-times"><strong>${icon('clock')}Class time updated</strong><p>Previous time: <s>${esc(session.previousStart)} – ${esc(session.previousEnd)}</s><br><b>New time: ${timeRange(session)} SAST</b></p></div>` : ''}<p>${esc(session.note)}</p><p>Your Mompreneur manages this session. Speak to her if you need help with the class time or location.</p><div class="lesson-actions"><button class="button primary" data-close-details>Got it ${icon('check')}</button></div>`;
+      `<div class="dialog-session-details"><p>${icon('calendar')}${formatDate(session.date)}</p><p>${icon('clock')}${timeRange(session)} SAST</p><p>${icon('pin')}${esc(session.location)} · In person</p></div>${session.previousStart ? `<div class="changed-times"><strong>${icon('clock')}Class time updated</strong><p>Previous time: <s>${esc(session.previousStart)} – ${esc(session.previousEnd)}</s><br><b>New time: ${timeRange(session)} SAST</b></p></div>` : ''}<p>${esc(session.note)}</p><div class="lesson-actions"><button class="button primary" data-close-details>Got it ${icon('check')}</button></div>`;
     $('#session-dialog').showModal();
     document.body.classList.add('modal-open');
     $('.dialog-close').focus();
@@ -184,24 +185,6 @@
     }
     if (event.target.closest('[data-close-details]')) $('#session-dialog').close();
   });
-  if (changedSession) {
-    $('.change-date').textContent = formatDate(changedSession.date, {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    });
-    $('.change-message').textContent =
-      `Your Robotics class will now run from ${changedSession.start} to ${changedSession.end}.`;
-    $('#class-change-button').addEventListener('click', () => {
-      selectDate(changedSession.date);
-      openDetails(changedSession);
-    });
-  } else $('#class-change-button').hidden = true;
-  $('#coming-up-list').innerHTML =
-    sessions
-      .filter((s) => s.date >= window.KIASecurity.currentDay() && s.id !== nextSession?.id)
-      .map(agendaRow)
-      .join('') || '<p class="calendar-empty">Your next sessions will appear here.</p>';
   const dialog = $('#session-dialog');
   $('.dialog-close').addEventListener('click', () => dialog.close());
   dialog.addEventListener('close', () => {
@@ -218,24 +201,6 @@
         event.clientY > r.bottom)
     )
       dialog.close();
-  });
-  $('#notification-button').addEventListener('click', () => {
-    const open = $('#notifications').hidden;
-    $('#notifications').hidden = !open;
-    $('#notification-button').setAttribute('aria-expanded', open);
-  });
-  document.addEventListener('click', (event) => {
-    if (!event.target.closest('.notification-wrap')) {
-      $('#notifications').hidden = true;
-      $('#notification-button').setAttribute('aria-expanded', false);
-    }
-  });
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !$('#notifications').hidden) {
-      $('#notifications').hidden = true;
-      $('#notification-button').setAttribute('aria-expanded', false);
-      $('#notification-button').focus();
-    }
   });
   renderCalendar();
   renderSelectedSession();

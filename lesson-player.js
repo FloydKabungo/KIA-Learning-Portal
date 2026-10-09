@@ -48,21 +48,28 @@
   }
   async function resource(root, item) {
     dispose(root);
-    const actor = window.KIAAccounts.current();
+    const actor = window.KIAPreview.current();
     if (!actor || (actor.role !== 'admin' && !window.KIALearning.unlocked(actor, item.courseId))) {
       root.textContent = 'This resource is not available to this account.';
       return;
+    }
+    // UI availability only. Storage authorization and signed streaming belong to the backend.
+    if (actor.role !== 'admin' && window.KIARelease) {
+      const c = window.KIAAdminData.read().courses.find(c => c.id === item.courseId);
+      const refs = (c?.modules || []).flatMap((m,mi) => m.lessons.filter(l => l.resourceId === item.id).map(l => ({mi,id:l.id})));
+      const available = c && (refs.length ? refs.some(r => window.KIARelease.status(c,r.mi,r.id).open) : window.KIARelease.status(c,0).open);
+      if (!available) { root.innerHTML = '<p class="media-status">This resource is in a locked learning block. Check its release date in your course.</p>'; return; }
     }
     const token = crypto.randomUUID(),
       state = { urls: [], controller: new AbortController() };
     root.dataset.mediaRequest = token;
     mounted.set(root, state);
-    const sessionNonce = window.KIAAccounts.currentSession()?.nonce;
+    const sessionNonce = window.KIAPreview.pageState()?.nonce;
     const fresh = () =>
       root.isConnected &&
       root.dataset.mediaRequest === token &&
-      window.KIAAccounts.current()?.id === actor.id &&
-      window.KIAAccounts.currentSession()?.nonce === sessionNonce;
+      window.KIAPreview.current()?.id === actor.id &&
+      window.KIAPreview.pageState()?.nonce === sessionNonce;
     const fail = (message) => {
       if (fresh()) root.innerHTML = `<p class="media-status" role="alert">${esc(message)}</p>`;
     };
@@ -92,7 +99,7 @@
           }
           if (item.type !== 'PDF') url = asURL(blob);
         } else if (item.source === 'text') {
-          root.innerHTML = `<div class="lesson-text">${esc(item.body)}</div>`;
+          root.innerHTML = `<div class="lesson-rich-text">${window.KIARichContent.render(item)}</div>`;
           return;
         } else url = safeURL(item.url, item.source === 'bundled');
         if (item.type === 'PDF' && !blob) {
@@ -136,8 +143,15 @@
           });
           return;
         }
-        if (['Image', 'Images', 'GIF'].includes(item.type))
-          root.innerHTML = `<img class="lesson-media" src="${esc(url)}" alt="${esc(item.title)}" referrerpolicy="no-referrer" draggable="false"/>`;
+        if (item.type === 'GIF') {
+          root.innerHTML = '<p class="media-status">This lesson includes an animated image. Play it when you are ready.</p><button type="button" class="button secondary">Play animation</button><div class="gif-slot"></div>';
+          const button = root.querySelector('button'), slot = root.querySelector('.gif-slot');
+          let playing = false;
+          button.addEventListener('click', () => { playing = !playing; slot.innerHTML = playing ? `<img class="lesson-media" src="${esc(url)}" alt="${esc(item.imageAlt || item.title)}"/>` : ''; button.textContent = playing ? 'Stop animation' : 'Play animation'; });
+          return;
+        }
+        if (['Image', 'Images'].includes(item.type))
+          root.innerHTML = `<img class="lesson-media" src="${esc(url)}" alt="${esc(item.imageAlt || item.title)}" referrerpolicy="no-referrer" draggable="false"/>`;
         else if (
           item.type === 'Video' &&
           (url.startsWith('blob:') ||
@@ -161,6 +175,12 @@
           root.innerHTML = `<iframe class="lesson-frame" src="${esc(src)}" title="${esc(item.title)}" sandbox="allow-scripts allow-presentation${trusted ? ' allow-same-origin' : ''}" allow="fullscreen; encrypted-media; camera 'none'; microphone 'none'; geolocation 'none'" referrerpolicy="no-referrer" allowfullscreen credentialless></iframe><p class="media-status">If this activity does not load, ask your Mompreneur to check the lesson link. Some websites do not allow embedding.</p>`;
         } else
           root.innerHTML = `<iframe class="lesson-frame" src="${esc(url)}" title="${esc(item.title)}" sandbox referrerpolicy="no-referrer" credentialless></iframe>`;
+        const video = root.querySelector('video');
+        if (video && item.subtitles?.trim().startsWith('WEBVTT')) {
+          const track = document.createElement('track');
+          track.kind='captions'; track.label='English'; track.srclang='en'; track.default=true;
+          track.src=asURL(new Blob([item.subtitles], {type:'text/vtt'})); video.append(track);
+        }
         root
           .querySelector('video,img')
           ?.addEventListener(
@@ -184,7 +204,10 @@
   }
   function lesson(root, item, courseId) {
     dispose(root);
-    root.innerHTML = `${item.body ? `<div class="lesson-text">${esc(item.body)}</div>` : ''}<div class="lesson-media-slot"></div>`;
+    if (window.KIAPreview.current()?.role !== 'admin' && window.KIARelease && !window.KIARelease.lessonStatus(item.id, courseId).open) {
+      root.innerHTML = `<p class="media-status">${esc(window.KIARelease.lessonStatus(item.id, courseId).message)}</p>`; return;
+    }
+    root.innerHTML = `<div class="lesson-media-slot"></div>${item.body || item.bodyHtml ? `<div class="lesson-rich-text">${window.KIARichContent.render(item)}</div>` : ''}${item.transcript ? `<details class="lesson-transcript"><summary>Read the transcript</summary><div class="transcript-text">${esc(item.transcript)}</div></details>` : ''}<p class="lesson-pause">You can pause and take a break whenever you need.</p>`;
     const slot = root.querySelector('.lesson-media-slot'),
       s = window.KIAAdminData.read();
     const media = item.resourceId
@@ -192,7 +215,7 @@
       : item.url
         ? { ...item, courseId, source: 'url' }
         : null;
-    if (media) resource(slot, media);
+    if (media) resource(slot, {...media, subtitles:item.subtitles, imageAlt:item.imageAlt});
     else if (item.resourceId)
       slot.innerHTML =
         '<p class="media-status">This resource is no longer available. Ask KIA to update the lesson.</p>';

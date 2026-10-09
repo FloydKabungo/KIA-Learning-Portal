@@ -1,7 +1,8 @@
 /* KIA design prototype. All learning content and progress below are sample data.
    Browser storage is for preview convenience only, not an authenticated backend. */
-(() => {
+(async () => {
   'use strict';
+  await window.KIALearnerReady;
   const esc = window.KIASecurity.escapeHTML;
   if (!window.KIALearner) return;
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -19,8 +20,8 @@
     return;
   }
   let { completed, quizScores } = readProgress();
-  const save = () => saveProgress(completed, quizScores);
-  const nextLesson = () => lessons.find((l) => !completed.has(l.id));
+  const save = () => { saveProgress(completed, quizScores); window.dispatchEvent(new Event('kia-progress-preview')); };
+  const nextLesson = () => lessons.find((l) => !completed.has(l.id) && window.KIARelease.lessonStatus(l.id, courseId).open);
   let openModule = nextLesson()?.mi ?? 0;
   const typeIcon = (type) =>
     ({ Video: 'play', Images: 'image', GIF: 'play', Text: 'file', Embedded: 'link' })[type] ||
@@ -35,10 +36,11 @@
     }, 3200);
   }
   function lessonRow(lesson) {
-    const locked = !window.KIALMS.canOpenLesson(lesson.id, completed);
+    const release = window.KIARelease.lessonStatus(lesson.id, courseId);
+    const locked = !release.open;
     const done = completed.has(lesson.id);
     const next = nextLesson()?.id === lesson.id;
-    return `<button class="lesson-row ${locked ? 'is-locked' : ''} ${done ? 'is-done' : ''} ${next ? 'is-next' : ''}" data-lesson="${esc(lesson.id)}" ${locked ? 'disabled aria-label="Locked lesson: complete earlier lessons first"' : ''}><span class="lesson-type">${icon(done ? 'check' : typeIcon(lesson.type))}</span><span class="lesson-details"><strong>${esc(lesson.title)}</strong><small>Lesson ${lesson.li + 1} · ${lesson.type}${locked ? ' · Complete earlier lessons to unlock' : done ? ' · Completed' : next ? ' · Up next' : ''}</small></span><span class="lesson-meta">${esc(lesson.duration)} min</span>${icon(next ? 'arrow' : 'chevron')}</button>`;
+    return `<button class="lesson-row ${locked ? 'is-locked' : ''} ${done ? 'is-done' : ''} ${next ? 'is-next' : ''}" data-lesson="${esc(lesson.id)}" ${locked ? 'disabled aria-label="Lesson not available yet"' : ''}><span class="lesson-type">${icon(done ? 'check' : typeIcon(lesson.type))}</span><span class="lesson-details"><strong>${esc(lesson.title)}</strong><small>Lesson ${lesson.li + 1} · ${lesson.type}${locked ? ' · ' + esc(release.message) : done ? ' · Completed' : next ? ' · Up next' : ''}</small></span><span class="lesson-meta">${esc(lesson.duration)} min</span>${icon(next ? 'arrow' : 'chevron')}</button>`;
   }
   function renderModules() {
     $('#module-list').innerHTML = modules
@@ -50,8 +52,10 @@
         const preview = current
           ? all.filter((l) => !completed.has(l.id)).slice(0, 3)
           : all.slice(0, 3);
-        const state = done ? 'Completed' : count ? 'In progress' : 'Not started';
-        return `<article class="module ${done ? 'is-complete' : ''} ${current ? 'is-current' : ''}"><h3><button class="module-toggle" id="module-toggle-${mi}" aria-expanded="${openModule === mi}" aria-controls="module-panel-${mi}" data-toggle-module="${mi}"><span class="module-index">${done ? icon('check') : String(mi + 1).padStart(2, '0')}</span><span class="module-copy"><span class="module-kicker">MODULE ${String(mi + 1).padStart(2, '0')}${current ? '<em>YOU ARE HERE</em>' : ''}</span><span class="module-title">${esc(module.title)}</span><span class="module-subtitle">${all.length} lessons · ${module.quizzes} ${module.quizzes === 1 ? 'quiz' : 'quizzes'}</span></span><span class="module-status">${state}${count && !done ? `<span class="mini-track"><span style="width:${(count / all.length) * 100}%"></span></span>` : ''}</span>${icon('chevron', 'chevron')}</button></h3><div class="module-content" id="module-panel-${mi}" role="region" aria-labelledby="module-toggle-${mi}" ${openModule === mi ? '' : 'hidden'}><div class="module-content-heading"><span>${current ? 'PICK UP WHERE YOU LEFT OFF' : done ? 'REVISIT YOUR LESSONS' : 'EXPLORE THIS MODULE'}</span><span>${icon('check')}${count} of ${all.length} complete</span></div>${preview.map(lessonRow).join('')}<div class="module-footer"><button class="text-button" data-open-module="${mi}">View all ${all.length} lessons ${icon('arrow')}</button><button class="text-button quiz-hint" data-module-quizzes="${mi}">${icon('quiz')}${module.quizzes} ${module.quizzes === 1 ? 'quiz' : 'quizzes'}</button></div></div></article>`;
+        const availability = window.KIARelease.status(currentCourse, mi);
+        const state = !availability.open ? availability.label : done ? 'Completed' : count ? 'In progress' : 'Available';
+        const art = ['robot','sensor','code','build','puzzle','rocket'][mi % 6];
+        return `<article class="module visual-module ${!availability.open ? 'is-locked' : ''} ${done ? 'is-complete' : ''}"><button class="visual-module-button" data-open-module="${mi}" aria-label="${esc(module.title)}, ${esc(state)}, ${count} of ${all.length} lessons done"><span class="module-picture"><img src="Assets/learner/${art}.svg" alt=""/><span class="visual-module-number">${String(mi + 1).padStart(2,'0')}</span></span><span class="visual-module-title">${esc(module.title)}</span><span class="visual-module-state">${!availability.open ? icon('lock') : done ? icon('check') : icon('play')}${esc(!availability.open ? availability.message : done ? 'Done!' : 'Explore')}</span><span class="visual-module-progress"><span style="width:${all.length ? count / all.length * 100 : 0}%"></span></span><small>${count} / ${all.length} done</small></button></article>`;
       })
       .join('');
   }
@@ -68,10 +72,7 @@
       rule.className = 'learning-rule-note';
       document.querySelector('.learning-layout').before(rule);
     }
-    rule.innerHTML =
-      currentCourse.lessonOrder === 'sequential'
-        ? '<strong>Step by step:</strong> complete each lesson to unlock the next. You can revisit completed lessons and practise quizzes.'
-        : '<strong>Your learning journey:</strong> explore lessons in any order, or use Resume lesson to continue where you left off.';
+    rule.innerHTML = '<span aria-hidden="true">◇</span> New modules open on the dates shown.';
     const count = completed.size;
     const percent = lessons.length ? Math.round((count / lessons.length) * 100) : 0;
     const moduleCount = modules.filter(
@@ -99,17 +100,18 @@
     );
     $('[role="progressbar"]').setAttribute('aria-valuemax', lessons.length || 1);
     const next = nextLesson();
-    $('#resume-button').disabled = !lessons.length;
+    const pending = lessons.find(l => !completed.has(l.id));
+    $('#resume-button').disabled = !next && !!pending;
     $('#resume-context').textContent = next
       ? `Module ${next.mi + 1} · ${modules[next.mi].title}`
       : lessons.length
-        ? `All ${lessons.length} lessons completed · Keep practising at your club`
-        : 'Your course content is being prepared';
+        ? (pending ? window.KIARelease.lessonStatus(pending.id, courseId).message : `All ${lessons.length} lessons done!`)
+        : 'Coming soon';
     $('#resume-lesson').innerHTML = next
       ? `${esc(next.title)}<small>Lesson ${next.li + 1} · ${next.duration} min</small>`
-      : `Great work, ${esc(window.KIALearner.name.split(' ')[0])}!<small>Revisit your favourite lessons.</small>`;
+      : pending ? 'You’re up to date!' : `Great work, ${esc(window.KIALearner.name.split(' ')[0])}!<small>Pick a favourite.</small>`;
     $('#resume-button').innerHTML =
-      `${icon(next ? 'play' : 'book', 'play-icon')}${next ? 'Resume lesson' : 'Review course'}${icon('arrow', 'arrow-icon')}`;
+      `${icon(next ? 'play' : 'book', 'play-icon')}${next ? 'Open lesson' : pending ? 'Coming soon' : 'Review course'}${icon('arrow', 'arrow-icon')}`;
     $('#completed-list').innerHTML =
       modules
         .map((module, mi) => {
@@ -119,7 +121,7 @@
             : '';
         })
         .join('') ||
-      '<p class="resource-note">Your completed lessons will appear here. Start with your first Robotics lesson.</p>';
+      '<p class="resource-note">Your completed lessons appear here.</p>';
     const latestDone = modules
       .map((m, mi) => ({ m, mi }))
       .filter(
@@ -131,17 +133,17 @@
       $('#milestone-heading').textContent =
         latestDone.mi === 0 ? 'First module. Done!' : `Module ${latestDone.mi + 1}. Done!`;
       $('.milestone-card p').textContent =
-        `${latestDone.m.title} is complete. Keep that curiosity going.`;
+        `${latestDone.m.title} is complete.`;
     } else {
-      $('#milestone-heading').textContent = 'Your journey has started';
-      $('.milestone-card p').textContent = 'Your next milestone is completing your first module.';
+      $('#milestone-heading').textContent = 'First step';
+      $('.milestone-card p').textContent = 'Complete a module.';
     }
   }
   $('#resource-list').innerHTML =
     resources
       .map(
         (resource) =>
-          `<button class="resource-item" data-resource="${esc(resource.id)}"><span class="resource-icon ${resource.color}">${icon(resource.icon)}</span><div><h3>${esc(resource.title)}</h3><p>${resource.kind} · View only</p></div>${icon('eye')}</button>`
+          `<button class="resource-item" data-resource="${esc(resource.id)}"><span class="resource-icon ${resource.color}"><img src="Assets/learner/${resource.type === 'Images' ? 'build' : 'code'}.svg" alt=""/></span><div><h3>${esc(resource.title)}</h3><p>${resource.kind} · View here</p></div>${icon('eye')}</button>`
       )
       .join('') || '<p class="media-status">KIA will add resources for this course here.</p>';
 
@@ -227,14 +229,14 @@
   function openLesson(id) {
     const lesson = lessons.find((l) => l.id === id);
     if (!lesson) return;
-    if (!Learning.canOpenLesson(id, completed, courseId)) {
-      toast('Complete the earlier lessons to unlock this one.');
+    if (!window.KIARelease.lessonStatus(id, courseId).open) {
+      toast(window.KIARelease.lessonStatus(id, courseId).message);
       return;
     }
     showDialog(
       lesson.title,
       `MODULE ${lesson.mi + 1} · LESSON ${lesson.li + 1} · ${esc(lesson.duration)} MIN`,
-      `<div id="lesson-content"></div><div id="lesson-quiz"></div><div class="lesson-actions"><button class="button primary" data-complete="${esc(id)}" ${lesson.type === 'Quiz' && quizScores[id] === undefined ? 'disabled' : ''}>${icon('check')}${completed.has(id) ? 'Completed · next lesson' : 'Mark lesson complete'}</button><button class="button secondary" data-open-module="${lesson.mi}">All module lessons</button></div>`
+      `<div id="lesson-content"></div><div id="lesson-quiz"></div><div class="lesson-actions"><button class="button primary" data-complete="${esc(id)}" ${lesson.type === 'Quiz' && quizScores[id] === undefined ? 'disabled' : ''}>${icon('check')}${completed.has(id) ? 'Done · next' : 'Done!'}</button><button class="button secondary" data-open-module="${lesson.mi}">All lessons</button></div>`
     );
     Player.lesson($('#lesson-content'), lesson, courseId);
     if (lesson.type === 'Quiz')
@@ -242,7 +244,7 @@
         $('#lesson-quiz'),
         lesson.questions,
         (score) => {
-          quizScores[id] = score;
+          quizScores[id] = Math.max(quizScores[id] || 0, score);
           save();
           render();
           $('[data-complete]').disabled = false;
@@ -264,8 +266,9 @@
         quizzes
           .map((q, qi) => {
             const score = quizScores[q.id];
-            const locked = q.lessonId && !Learning.canOpenLesson(q.lessonId, completed, courseId);
-            return `<button class="lesson-row" data-quiz="${mi},${qi}" ${locked ? 'disabled' : ''}><span class="lesson-type">${icon('quiz')}</span><span class="lesson-details"><strong>${esc(q.title)}</strong><small>${locked ? 'Complete earlier lessons to unlock' : score === undefined ? 'Not completed' : `Completed · ${score}%`}${q.sample ? ' · Sample quiz' : ''}</small></span>${icon('arrow')}</button>`;
+            const release = window.KIARelease.status(currentCourse, mi, q.lessonId);
+            const locked = !release.open;
+            return `<button class="lesson-row" data-quiz="${mi},${qi}" ${locked ? 'disabled' : ''}><span class="lesson-type">${icon('quiz')}</span><span class="lesson-details"><strong>${esc(q.title)}</strong><small>${locked ? esc(release.message) : score === undefined ? 'Not completed' : `Completed · ${score}%`}</small></span>${icon('arrow')}</button>`;
           })
           .join('') || '<p class="media-status">No quizzes have been added to this module.</p>'
       }`
@@ -274,17 +277,19 @@
   function openQuiz(mi, qi) {
     const q = moduleQuizzes(mi)[qi];
     if (!q) return;
+    const release = window.KIARelease.status(currentCourse, mi, q.lessonId);
+    if (!release.open) { toast(release.message); return; }
     if (q.lessonId) return openLesson(q.lessonId);
     showDialog(
       q.title,
-      q.sample ? 'PRACTICE QUIZ · SAMPLE QUESTIONS' : 'COURSE QUIZ',
+      q.sample ? 'PRACTICE QUIZ' : 'COURSE QUIZ',
       '<div id="player-quiz"></div>'
     );
     Player.quiz(
       $('#player-quiz'),
       q.questions,
       (score) => {
-        quizScores[q.id] = score;
+        quizScores[q.id] = Math.max(quizScores[q.id] || 0, score);
         save();
         render();
       },
@@ -317,8 +322,8 @@
       openQuiz(mi, qi);
     } else if (action.dataset.complete) {
       const id = action.dataset.complete;
-      if (!window.KIALMS.canOpenLesson(id, completed)) {
-        toast('Complete the earlier lessons first.');
+      if (!window.KIARelease.lessonStatus(id, courseId).open) {
+        toast(window.KIARelease.lessonStatus(id, courseId).message);
         return;
       }
       const wasComplete = completed.has(id);
@@ -337,30 +342,12 @@
       else {
         dialog.close();
         toast(
-          next
-            ? 'Lesson complete. Your progress has been updated.'
-            : 'All lessons complete. Great work!'
+          wasComplete ? 'This lesson is already complete. Your points are unchanged.' : next
+            ? 'Lesson complete. You earned 10 achievement points.'
+            : (completed.size === lessons.length ? 'Course complete! Your achievement points have been updated.' : 'Available lessons complete. You earned 10 points. Check the next opening date.')
         );
         $('#resume-button').focus();
       }
-    }
-  });
-  $('#notification-button').addEventListener('click', () => {
-    const open = $('#notifications').hidden;
-    $('#notifications').hidden = !open;
-    $('#notification-button').setAttribute('aria-expanded', open);
-  });
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.notification-wrap') || e.target.closest('#notifications a')) {
-      $('#notifications').hidden = true;
-      $('#notification-button').setAttribute('aria-expanded', false);
-    }
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !$('#notifications').hidden) {
-      $('#notifications').hidden = true;
-      $('#notification-button').setAttribute('aria-expanded', false);
-      $('#notification-button').focus();
     }
   });
   const assignedCourses = window.KIAAdminData.read().courses.filter((c) =>
@@ -379,9 +366,9 @@
       );
   }
   $('.course-label').innerHTML =
-    '<span class="label-dot"></span>YOUR ASSIGNED COURSE <span class="course-label-divider">/</span> ' +
+    '<span class="label-dot"></span>' +
     esc(currentCourse.title.toUpperCase());
-  $('.page-intro').textContent = `Your ${currentCourse.title} journey, one discovery at a time.`;
+  $('.page-intro').textContent = 'Choose a module.';
   $('.course-workspace').setAttribute('aria-label', currentCourse.title + ' course');
   render();
   // Dashboard links open the relevant learning view directly.
@@ -391,7 +378,7 @@
   if (entry.get('resume') === '1') {
     const lesson = nextLesson();
     if (lesson) openLesson(lesson.id);
-    else selectTab('tab-completed');
+    else selectTab('tab-modules');
   } else if (entry.get('quizzes') === '1') openModulePreview(nextLesson()?.mi ?? 0, true);
   else if (entry.has('resource')) openResource(entry.get('resource'));
   else if (entry.get('schedule') === '1') location.replace('schedule.html');

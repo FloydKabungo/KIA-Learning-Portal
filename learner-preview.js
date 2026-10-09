@@ -1,13 +1,7 @@
-/* Selected learner identity for the browser preview. Personal details are
-   managed by KIA / the club owner, not collected from the learner. */
-(() => {
-  'use strict';
-  const Auth = window.KIAAccounts,
-    profile = Auth.guard('learner');
-  if (!profile || profile.role !== 'learner') {
-    location.replace('login.html');
-    return;
-  }
+/* Local design fixture only. No account or login session is created. */
+window.KIALearnerReady = (async () => {
+  const profile = window.KIAPreview.selectView('learner');
+  if (!profile) return null;
   window.KIALearner = profile;
   const $ = (selector) => document.querySelector(selector);
   const esc = window.KIASecurity.escapeHTML;
@@ -33,10 +27,10 @@
   const notifications = $('#notifications');
   if (notifications) {
     notifications.querySelector('p').textContent = changed
-      ? `Your ${changed.title} on ${formatDate(changed.date, { day: 'numeric', month: 'long' })} now starts at ${changed.start}.`
+      ? `${changed.title}: ${formatDate(changed.date, { day: 'numeric', month: 'short' })} · ${changed.start} (new time)`
       : next
-        ? `Your next club session is on ${formatDate(next.date, { day: 'numeric', month: 'long' })} at ${next.start}.`
-        : 'Your Mompreneur will share club sessions here.';
+        ? `${formatDate(next.date, { day: 'numeric', month: 'short' })} · ${next.start}`
+        : 'No class booked yet.';
     const link = notifications.querySelector('a');
     link.href = changed ? sessionURL(changed) : 'schedule.html';
     link.innerHTML = (changed ? 'See class change' : 'View schedule') + icon('arrow');
@@ -62,8 +56,5 @@
       $('.session-message').textContent = 'Your Mompreneur will share your next class date here.';
     }
   }
-  // Avoid restoring an authenticated page from browser history after logging out.
-  window.addEventListener('pageshow', () => {
-    if (!Auth.current()) location.replace('login.html');
-  });
+  return profile;
 })();

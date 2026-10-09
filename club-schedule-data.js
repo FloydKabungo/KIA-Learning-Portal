@@ -50,7 +50,7 @@
   const sessionURL = (session) => `schedule.html?session=${encodeURIComponent(session.id)}`;
   function context() {
     const state = window.KIAAdminData?.read();
-    const u = window.KIAAccounts?.current();
+    const u = window.KIAPreview?.current();
     const club =
       state?.branches.find((b) => b.id === u?.branchId) ||
       (u ? { id: null, name: 'Awaiting club assignment' } : sampleClub);

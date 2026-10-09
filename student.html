@@ -1,592 +1,174 @@
 <!doctype html>
-<html lang="en" class="auth-loading">
+<html lang="en" class="preview-loading">
   <head>
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; frame-src https: blob:; connect-src https:; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; frame-src https: blob:; connect-src 'self' https:; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
     <script src="portal-security.js" defer></script>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="Assets/kia-mark.png" type="image/png" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="learning.css" />
     <title>Learner Home | KIA Learning Portal</title>
 
     <link rel="stylesheet" href="accounts.css" />
     <script src="portal-store.js" defer></script>
+    <script src="release-preview.js" defer></script>
     <script src="learning-data.js" defer></script>
     <script src="club-schedule-data.js" defer></script>
     <script src="admin-data.js" defer></script>
-    <script src="accounts.js" defer></script>
+    <script src="designer-context.js" defer></script>
     <script src="lms-data.js" defer></script>
     <script src="pdf-viewer.js" defer></script>
+    <script src="rich-content.js" defer></script>
     <script src="lesson-player.js" defer></script>
-    <script src="learner-profile.js" defer></script>
+    <script src="learner-preview.js" defer></script>
     <script src="learner-announcements.js" defer></script>
     <script src="learning-home.js" defer></script>
+    <script src="achievements.js" defer></script>
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="lms-features.css" />
     <link rel="stylesheet" href="frontend-features.css" />
 
     <link rel="stylesheet" href="student-page.css" />
+      <link rel="stylesheet" href="portal-refresh.css" />
+    <link rel="stylesheet" href="learner-visual.css" />
+    <script src="portal-refresh.js" defer></script>
+    <script src="learner-navigation.js" defer></script>
   </head>
-  <body class="student-dashboard-body">
-    <header class="student-topbar">
-      <div class="student-topbar-inner">
-        <a class="student-brand" href="index.html" aria-label="KIA Learning Portal home">
-          <img src="Assets/kia-mark.png" alt="KIA Africa logo" />
-          <span class="student-brand-copy"
-            ><strong>KIDS</strong><strong>INNOVATE</strong><strong>AFRICA</strong></span
-          >
+
+  <body class="learner-portal learner-home">
+    <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="m3 10 9-7 9 7M5 9v11h5v-6h4v6h5V9" />
+      </symbol>
+      <symbol id="i-book" viewBox="0 0 24 24">
+        <path
+          d="M12 5v15M3 4h5a4 4 0 0 1 4 2 4 4 0 0 1 4-2h5v15h-5a4 4 0 0 0-4 2 4 4 0 0 0-4-2H3Z"
+        />
+      </symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="16" rx="3" />
+        <path d="M8 3v4m8-4v4M3 10h18M8 14h2m4 0h2m-8 3h2" />
+      </symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6" /></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 4 8 8-8 8" /></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24">
+        <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z" />
+        <circle cx="12" cy="10" r="2" />
+      </symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24">
+        <path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10ZM10 21h4" />
+      </symbol>
+      <symbol id="i-exit" viewBox="0 0 24 24">
+        <path d="M10 4H4v16h6m-1-8h12m-4-4 4 4-4 4" />
+      </symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z" /></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24">
+        <path d="m12 3 10 5-10 5L2 8Zm-9 9 9 5 9-5M3 16l9 5 9-5" />
+      </symbol>
+      <symbol id="i-quiz" viewBox="0 0 24 24">
+        <path d="M9 4H5v17h14V4h-4" />
+        <rect x="9" y="2" width="6" height="5" rx="1" />
+        <path d="m8 13 3 3 5-5" />
+      </symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 3v18h17M8 16v-4m5 4V8m5 8V5" /></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-file" viewBox="0 0 24 24">
+        <path d="M14 2H5v20h14V7Zm0 0v6h5M8 12h8m-8 4h6" />
+      </symbol>
+      <symbol id="i-image" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <circle cx="8" cy="8" r="1.5" />
+        <path d="m3 17 6-5 4 4 3-3 5 4" />
+      </symbol>
+      <symbol id="i-link" viewBox="0 0 24 24">
+        <path d="m9 15 6-6M9 7l3-3a5 5 0 0 1 8 8l-3 3M7 9l-3 3a5 5 0 0 0 8 8l3-3" />
+      </symbol>
+      <symbol id="i-help" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9 9a3 3 0 1 1 5 2c-2 1-2 2-2 3m0 3h.01" />
+      </symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6" /></symbol>
+      <symbol id="i-robot" viewBox="0 0 24 24">
+        <rect x="4" y="7" width="16" height="14" rx="4" />
+        <path d="M12 3v4M2 12v5m20-5v5M9 17h6m-7-6v2m8-2v2" />
+        <circle cx="12" cy="3" r="1" />
+      </symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z" /></symbol></svg>
+    <a class="skip-link" href="#main">Skip to learning</a>
+    <header class="topbar">
+      <div class="header-inner">
+        <a class="brand" href="student.html" aria-label="Kids Innovate Africa learner home">
+          <img src="Assets/kia-mark.png" alt="" width="36" height="48" />
+          <span>KIDS<br />INNOVATE<br />AFRICA</span>
         </a>
-
-        <nav class="student-nav" aria-label="Student navigation">
-          <a class="active" href="student.html">
-            <span class="nav-icon" aria-hidden="true">
-              <svg
-                class="icon-svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M3 10.5 12 3l9 7.5" />
-                <path d="M5 9.8V21h14V9.8" />
-              </svg> </span
-            ><span>Home</span>
-          </a>
-          <a href="my-learning.html">
-            <span class="nav-icon" aria-hidden="true">
-              <svg
-                class="icon-svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M4 5h16v14H4z" />
-                <path d="M12 5v14" />
-              </svg> </span
-            ><span>My Learning</span>
-          </a>
-          <a href="schedule.html">
-            <span class="nav-icon" aria-hidden="true">
-              <svg
-                class="icon-svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="3" y="5" width="18" height="16" rx="2" />
-                <path d="M16 3v4M8 3v4M3 10h18" />
-              </svg> </span
-            ><span>Schedule</span>
-          </a>
+        <nav class="primary-nav" aria-label="Learner navigation">
+          <a href="student.html" aria-current="page"
+            ><svg class="icon"><use href="#i-home" /></svg><span>Home</span></a
+          >
+          <a href="my-learning.html"
+            ><svg class="icon"><use href="#i-book" /></svg><span>My Learning</span></a
+          >
+          <a href="schedule.html"
+            ><svg class="icon"><use href="#i-calendar" /></svg><span>Schedule</span></a
+          >
+          <a href="achievements.html"><svg class="icon" aria-hidden="true"><use href="#i-star" /></svg><span>Achievements</span></a>
         </nav>
-
-        <div class="student-user-area">
-          <button class="student-notification" type="button" aria-label="Notifications">
-            <svg class="icon-svg" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-4H5a1 1 0 0 1-.78-1.62c1.08-1.33 1.78-3.18 1.78-5.38V10a6 6 0 1 1 12 0v1c0 2.2.7 4.05 1.78 5.38A1 1 0 0 1 19 18Z"
-              />
-            </svg>
-            <span></span>
-          </button>
-          <div class="student-avatar">S</div>
-          <div class="student-user-copy"><strong>Sean</strong><span>Student</span></div>
-          <a class="student-logout" href="login.html">Log out</a>
+        <div class="account">
+          <div class="notification-wrap">
+            <button
+              class="icon-button notification-button"
+              id="notification-button"
+              aria-label="Club notifications"
+              aria-expanded="false"
+              aria-controls="notifications"
+            >
+              <svg class="icon"><use href="#i-bell" /></svg><span class="notification-dot"></span>
+            </button>
+            <section
+              id="notifications"
+              class="notification-popover"
+              aria-label="Club notifications"
+              hidden
+            >
+              <strong>Your club update</strong>
+              <p>Your Robotics class on Friday, 9 October now starts at 16:00.</p>
+              <a href="schedule.html?session=club-2026-10-09"
+                >See class change <svg class="icon"><use href="#i-arrow" /></svg
+              ></a>
+            </section>
+          </div>
+          <span class="avatar" aria-hidden="true">S</span>
+          <div class="account-name"><strong>Sean</strong><small>Learner</small></div>
+          <a class="logout" href="login.html" aria-label="Exit"
+            ><svg class="icon"><use href="#i-exit" /></svg><span>Exit</span></a
+          >
         </div>
       </div>
     </header>
-
-    <main class="student-dashboard-main">
-      <section class="student-welcome">
-        <div class="student-welcome-copy">
-          <p class="student-kicker">WELCOME BACK, SEAN</p>
-          <h1>Keep Learning,<br /><span>Keep Building!</span></h1>
-          <p class="student-welcome-text">
-            Continue your Robotics journey, complete your lessons and grow your skills with Kids
-            Innovate Africa.
-          </p>
-          <div class="club-chip"><span>●</span> Your Club: <strong>Parklands Club</strong></div>
-        </div>
-        <div class="student-welcome-image">
-          <img src="Assets/robotics-student.jpg" alt="KIA learner working with a robotics kit" />
-        </div>
-        <div class="student-welcome-note">
-          STEM<br />CREATIVITY<br />INNOVATION<br /><span>for a brighter future</span>
-        </div>
-      </section>
-
-      <div class="student-dashboard-wrap">
-        <section class="student-overview-grid">
-          <article class="student-panel overview-panel">
-            <div class="panel-heading">
-              <div>
-                <h2>My Learning Overview</h2>
-                <p>Your course, progress and upcoming sessions at a glance.</p>
-              </div>
-            </div>
-            <div class="overview-stats">
-              <div class="stat-box stat-blue">
-                <span class="stat-icon" aria-hidden="true"
-                  ><svg
-                    class="icon-svg lg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect x="4" y="4" width="16" height="16" rx="2" />
-                    <path d="M9 4v16M15 4v16" /></svg></span
-                ><strong>1</strong><span>Assigned Course</span><small>Robotics &amp; Coding</small>
-              </div>
-              <div class="stat-box stat-green">
-                <span class="stat-icon" aria-hidden="true"
-                  ><svg
-                    class="icon-svg lg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M20 6 9 17l-5-5" /></svg></span
-                ><strong>12</strong><span>Completed Lessons</span><small>Keep going!</small>
-              </div>
-              <div class="stat-box stat-orange">
-                <span class="stat-icon" aria-hidden="true"
-                  ><svg class="icon-svg lg" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M8 5.14v13.72c0 .78.84 1.26 1.5.86l10-6.86a1 1 0 0 0 0-1.72l-10-6.86A1 1 0 0 0 8 5.14Z"
-                    /></svg></span
-                ><strong>5</strong><span>Lessons in Progress</span><small>Continue learning</small>
-              </div>
-              <div class="stat-box stat-purple">
-                <span class="stat-icon" aria-hidden="true"
-                  ><svg
-                    class="icon-svg lg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect x="3" y="5" width="18" height="16" rx="2" />
-                    <path d="M16 3v4M8 3v4M3 10h18" /></svg></span
-                ><strong>3</strong><span>Upcoming Sessions</span><small>View schedule</small>
-              </div>
-            </div>
-          </article>
-
-          <article class="student-panel progress-panel">
-            <div class="panel-heading compact"><h2>Overall Progress</h2></div>
-            <div class="overall-progress-number">38%</div>
-            <div class="progress-track"><span style="width: 38%"></span></div>
-            <p>12 of 32 lessons completed</p>
-          </article>
-
-          <div
-            class="spotlight-visual"
-            role="img"
-            aria-label="Young learner building a robotics project"
-          >
-            <img
-              src="Assets/robotics-landscape.png"
-              alt="Young learner building a robotics project"
-            />
-            <div class="spotlight-overlay">
-              <div class="spotlight-copy">
-                <span class="spotlight-tag">Hands-on Build</span>
-                <h3>Build, test and explore</h3>
-                <p>Robotics builds, coding practice and creative STEM activities.</p>
-              </div>
-              <a class="spotlight-cta" href="my-learning.html?resume=1">Open Lesson</a>
-            </div>
-          </div>
-        </section>
-
-        <section class="student-main-grid">
-          <article class="student-panel course-panel" id="my-course">
-            <div class="panel-heading compact"><h2>My Course</h2></div>
-            <div class="course-summary">
-              <img src="Assets/robotics-student.jpg" alt="Robotics and coding course" />
-              <div>
-                <span class="assigned-pill">✓ Assigned Course</span>
-                <h3>Robotics &amp; Coding</h3>
-                <p>Build. Code. Create.</p>
-                <div class="course-progress-line">
-                  <div class="progress-track"><span style="width: 38%"></span></div>
-                  <strong>38%</strong>
-                </div>
-              </div>
-            </div>
-            <div class="course-menu">
-              <a href="my-learning.html?view=modules"
-                ><span aria-hidden="true"
-                  ><svg
-                    class="icon-svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M12 3 3 7l9 4 9-4-9-4Z" />
-                    <path d="m3 12 9 4 9-4" />
-                    <path d="m3 17 9 4 9-4" /></svg></span
-                ><strong>Modules</strong><small>6 Modules</small><b>›</b></a
-              >
-              <a href="my-learning.html?resume=1"
-                ><span aria-hidden="true"
-                  ><svg class="icon-svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M8 5.14v13.72c0 .78.84 1.26 1.5.86l10-6.86a1 1 0 0 0 0-1.72l-10-6.86A1 1 0 0 0 8 5.14Z"
-                    /></svg></span
-                ><strong>Lessons</strong><small>32 Lessons</small><b>›</b></a
-              >
-              <a href="my-learning.html?quizzes=1"
-                ><span aria-hidden="true"
-                  ><svg
-                    class="icon-svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M20 6 9 17l-5-5" /></svg></span
-                ><strong>Quizzes</strong><small>10 Quizzes</small><b>›</b></a
-              >
-              <a href="my-learning.html?view=completed"
-                ><span aria-hidden="true"
-                  ><svg
-                    class="icon-svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M4 19h16" />
-                    <path d="M7 16V9" />
-                    <path d="M12 16V5" />
-                    <path d="M17 16v-3" /></svg></span
-                ><strong>Your Progress</strong><small>12 / 32 Completed</small><b>›</b></a
-              >
-            </div>
-          </article>
-
-          <article class="student-panel lesson-panel" id="current-lesson">
-            <div class="panel-heading compact">
-              <h2>Current Lesson</h2>
-              <a href="my-learning.html">Go to Module →</a>
-            </div>
-            <a
-              class="lesson-video-card"
-              href="my-learning.html?resume=1"
-              aria-label="Open your current lesson"
-            >
-              <img src="Assets/robotics-student.jpg" alt="Learner completing robotics lesson" />
-              <span class="play-button" aria-hidden="true"
-                ><svg class="icon-svg lg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="m8 5 11 7-11 7Z" /></svg
-              ></span>
-              <div class="video-bar">
-                <span>Open lesson preview</span><span class="lesson-duration">18 min</span>
-              </div>
-            </a>
-            <h3>Module 2: Sensors and Movement</h3>
-            <h4>Lesson 5: Ultrasonic Sensor Introduction</h4>
-            <p>Learn how ultrasonic sensors work and how to use them in your robot.</p>
-            <div class="content-type-row" aria-label="Supported lesson content types">
-              <span class="type-video"
-                ><svg class="icon-svg" viewBox="0 0 24 24" fill="currentColor">
-                  <path
-                    d="M8 5.14v13.72c0 .78.84 1.26 1.5.86l10-6.86a1 1 0 0 0 0-1.72l-10-6.86A1 1 0 0 0 8 5.14Z"
-                  />
-                </svg>
-                Video</span
-              >
-              <span class="type-image"
-                ><svg
-                  class="icon-svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <circle cx="8.5" cy="10" r="1.5" />
-                  <path d="m21 16-5.5-5.5L7 19" />
-                </svg>
-                Images</span
-              >
-              <span class="type-gif"
-                ><svg
-                  class="icon-svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <path d="M8 12h3v3H8zM14 12h4M14 9h4M14 15h4" />
-                </svg>
-                GIFs</span
-              >
-              <span class="type-text"
-                ><svg
-                  class="icon-svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M4 6h16M8 12h8M8 18h8" />
-                </svg>
-                Text</span
-              >
-              <span class="type-embed"
-                ><svg
-                  class="icon-svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="m10 14-4-4 4-4" />
-                  <path d="m14 6 4 4-4 4" />
-                </svg>
-                Embedded</span
-              >
-            </div>
-          </article>
-
-          <aside class="student-side-column">
-            <article class="student-panel schedule-panel" id="schedule">
-              <div class="panel-heading compact">
-                <h2>Upcoming Club Sessions</h2>
-                <a href="schedule.html">View All →</a>
-              </div>
-              <div class="session-list">
-                <div class="session-item">
-                  <div class="session-date"><strong>SEP</strong><span>25</span></div>
-                  <div>
-                    <strong>Robotics Class</strong>
-                    <p>3:00 PM – 4:30 PM</p>
-                    <small>📍 Parklands Club</small>
-                  </div>
-                  <span class="next-pill">Next</span>
-                </div>
-                <div class="session-item">
-                  <div class="session-date"><strong>OCT</strong><span>02</span></div>
-                  <div>
-                    <strong>Robotics Class</strong>
-                    <p>3:00 PM – 4:30 PM</p>
-                    <small>📍 Parklands Club</small>
-                  </div>
-                  <b>›</b>
-                </div>
-                <div class="session-item">
-                  <div class="session-date"><strong>OCT</strong><span>09</span></div>
-                  <div>
-                    <strong>Robotics Class</strong>
-                    <p>3:00 PM – 4:30 PM</p>
-                    <small>📍 Parklands Club</small>
-                  </div>
-                  <b>›</b>
-                </div>
-              </div>
-            </article>
-
-            <article class="student-panel achievements-panel">
-              <div class="panel-heading compact"><h2>My Achievements</h2></div>
-              <a class="achievement-item" href="my-learning.html?view=completed"
-                ><span class="achievement-icon green"
-                  ><svg
-                    class="icon-svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M20 6 9 17l-5-5" /></svg
-                ></span>
-                <div><strong>Module 1 Completed</strong><small>5 Sep 2026</small></div>
-                <b>›</b></a
-              >
-              <a class="achievement-item" href="my-learning.html?view=completed"
-                ><span class="achievement-icon purple"
-                  ><svg class="icon-svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="m12 2 2.7 5.47 6.03.88-4.36 4.25 1.03 6-5.4-2.84-5.4 2.84 1.03-6L3.27 8.35l6.03-.88L12 2Z"
-                    /></svg
-                ></span>
-                <div>
-                  <strong>Quiz Score: 90%</strong><small>Lesson 4 – Basic Programming</small>
-                </div>
-                <b>›</b></a
-              >
-            </article>
-          </aside>
-        </section>
-
-        <section class="student-panel resources-panel">
-          <div class="resources-head">
-            <div>
-              <h2>
-                <svg
-                  class="icon-svg lg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 0 4 24V4.5A2.5 2.5 0 0 1 6.5 2Z" />
-                </svg>
-                Lesson Resources
-              </h2>
-              <p>
-                Helpful resources for your learning journey.
-                <strong>View only — no downloads.</strong>
-              </p>
-            </div>
-            <div class="view-only-note">
-              <svg
-                class="icon-svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="3" y="11" width="18" height="10" rx="2" />
-                <path d="M7 11V8a5 5 0 0 1 10 0v3" />
-              </svg>
-              Open resources inside the platform. No download button is provided.
-            </div>
-          </div>
-          <div class="resource-grid">
-            <a class="resource-card resource-blue" href="my-learning.html?resource=guide"
-              ><span aria-hidden="true"
-                ><svg
-                  class="icon-svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 0 4 24V4.5A2.5 2.5 0 0 1 6.5 2Z" /></svg
-              ></span>
-              <div><strong>Robotics Guide</strong><small>Interactive Guide</small></div>
-              <b>◉</b></a
-            >
-            <a class="resource-card resource-green" href="my-learning.html?resource=diagram"
-              ><span aria-hidden="true"
-                ><svg
-                  class="icon-svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <circle cx="8.5" cy="10" r="1.5" />
-                  <path d="m21 16-5.5-5.5L7 19" /></svg
-              ></span>
-              <div><strong>Sensor Connections</strong><small>Image Gallery</small></div>
-              <b>◉</b></a
-            >
-            <a class="resource-card resource-purple" href="my-learning.html?resource=animation"
-              ><span aria-hidden="true"
-                ><svg
-                  class="icon-svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <path d="M8 12h3v3H8zM14 12h4M14 9h4M14 15h4" /></svg
-              ></span>
-              <div><strong>Sensor Animations</strong><small>GIF Resources</small></div>
-              <b>◉</b></a
-            >
-            <a class="resource-card resource-orange" href="my-learning.html?resource=notes"
-              ><span aria-hidden="true"
-                ><svg
-                  class="icon-svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M4 6h16M8 12h8M8 18h8" /></svg
-              ></span>
-              <div><strong>Key Concepts</strong><small>Text Notes</small></div>
-              <b>◉</b></a
-            >
-            <a class="resource-card resource-pink" href="my-learning.html?resource=interactive"
-              ><span aria-hidden="true"
-                ><svg
-                  class="icon-svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="m10 14-4-4 4-4" />
-                  <path d="m14 6 4 4-4 4" /></svg
-              ></span>
-              <div><strong>Robot Decision Lab</strong><small>Embedded Content</small></div>
-              <b>◉</b></a
-            >
-          </div>
-        </section>
-      </div>
+    <main id="main" class="page">
+      <div class="page-heading"><div><h1>Hi, <span data-home-name>Sean</span>!</h1><p class="page-intro">What will you explore?</p></div><span class="club-label">Parklands Club</span></div>
+      <section class="home-next" aria-labelledby="home-next-title"><div class="home-next-copy"><span class="home-course-label" data-home-course>Robotics</span><h2 id="home-next-title">Ready to build?</h2><p data-home-context></p><a class="button primary" data-home-resume href="my-learning.html"><svg class="icon" aria-hidden="true"><use href="#i-play" /></svg><span>Let’s go</span><svg class="icon" aria-hidden="true"><use href="#i-arrow" /></svg></a></div><div class="home-next-art"><img src="Assets/learner/robot.svg" alt="" /></div></section>
+      <nav class="visual-destinations" aria-label="Choose your next activity">
+        <a class="destination-card" href="my-learning.html"><img src="Assets/learner/build.svg" alt="" /><span><strong>My Learning</strong><svg class="icon" aria-hidden="true"><use href="#i-arrow" /></svg></span></a>
+        <a class="destination-card" href="schedule.html"><img src="Assets/learner/calendar.svg" alt="" /><span><strong>Schedule</strong><svg class="icon" aria-hidden="true"><use href="#i-arrow" /></svg></span><small data-home-session>Next class</small></a>
+        <a class="destination-card" href="achievements.html"><img src="Assets/learner/badge-star.svg" alt="" /><span><strong>Achievements</strong><svg class="icon" aria-hidden="true"><use href="#i-arrow" /></svg></span></a>
+      </nav>
+      <div class="visual-home-progress"><section class="visual-progress-card" aria-label="Course progress"><div><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg><strong data-home-completed>12 / 32</strong><span>lessons done</span></div><div class="progress-track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="38"><span data-home-progress></span></div></section><section id="reward-summary" class="rewards-banner" aria-label="Your points"></section></div>
+      <div id="home-notices"></div>
+      <a class="visual-help" href="signup.html#contact"><svg class="icon" aria-hidden="true"><use href="#i-help" /></svg>Need help?</a>
     </main>
   </body>
 </html>

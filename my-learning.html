@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" class="auth-loading">
+<html lang="en" class="preview-loading">
   <head>
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; frame-src https: blob:; connect-src https:; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; frame-src https: blob:; connect-src 'self' https:; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
     <script src="portal-security.js" defer></script>
 
@@ -19,23 +19,30 @@
     <link rel="stylesheet" href="learning.css" />
     <link rel="stylesheet" href="accounts.css" />
     <script src="portal-store.js" defer></script>
+    <script src="release-preview.js" defer></script>
     <script src="learning-data.js" defer></script>
     <script src="club-schedule-data.js" defer></script>
     <script src="admin-data.js" defer></script>
-    <script src="accounts.js" defer></script>
+    <script src="designer-context.js" defer></script>
     <script src="lms-data.js" defer></script>
     <script src="pdf-viewer.js" defer></script>
+    <script src="rich-content.js" defer></script>
     <script src="lesson-player.js" defer></script>
-    <script src="learner-profile.js" defer></script>
+    <script src="learner-preview.js" defer></script>
     <script src="learner-announcements.js" defer></script>
     <script src="learning.js" defer></script>
+    <script src="achievements.js" defer></script>
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="lms-features.css" />
     <link rel="stylesheet" href="frontend-features.css" />
 
     <link rel="stylesheet" href="my-learning-page.css" />
+      <link rel="stylesheet" href="portal-refresh.css" />
+    <link rel="stylesheet" href="learner-visual.css" />
+    <script src="portal-refresh.js" defer></script>
+    <script src="learner-navigation.js" defer></script>
   </head>
-  <body>
+  <body class="learner-portal">
     <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <symbol id="i-home" viewBox="0 0 24 24">
         <path d="m3 10 9-7 9 7M5 9v11h5v-6h4v6h5V9" />
@@ -101,6 +108,7 @@
         <path d="M12 3v4M2 12v5m20-5v5M9 17h6m-7-6v2m8-2v2" />
         <circle cx="12" cy="3" r="1" />
       </symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z" /></symbol>
     </svg>
     <a class="skip-link" href="#main">Skip to learning</a>
     <header class="topbar">
@@ -119,6 +127,7 @@
           <a href="schedule.html"
             ><svg class="icon"><use href="#i-calendar" /></svg><span>Schedule</span></a
           >
+          <a href="achievements.html"><svg class="icon" aria-hidden="true"><use href="#i-star" /></svg><span>Achievements</span></a>
         </nav>
         <div class="account">
           <div class="notification-wrap">
@@ -146,8 +155,8 @@
           </div>
           <span class="avatar" aria-hidden="true">S</span>
           <div class="account-name"><strong>Sean</strong><small>Learner</small></div>
-          <a class="logout" href="login.html" aria-label="Log out"
-            ><svg class="icon"><use href="#i-exit" /></svg><span>Log out</span></a
+          <a class="logout" href="login.html" aria-label="Exit"
+            ><svg class="icon"><use href="#i-exit" /></svg><span>Exit</span></a
           >
         </div>
       </div>
@@ -155,9 +164,9 @@
     <main id="main" class="page">
       <div class="page-heading">
         <div>
-          <p class="eyebrow">LET’S MAKE SOMETHING GREAT</p>
+          <p class="eyebrow">LET’S EXPLORE</p>
           <h1>My Learning<span>.</span></h1>
-          <p class="page-intro">Your Robotics journey, one discovery at a time.</p>
+          <p class="page-intro">Choose a module.</p>
         </div>
         <span class="club-label"
           ><svg class="icon"><use href="#i-pin" /></svg>Parklands Club</span
@@ -170,7 +179,7 @@
             <span class="label-dot"></span>YOUR ASSIGNED COURSE
             <span class="course-label-divider">/</span> ROBOTICS &amp; CODING
           </div>
-          <h2 id="course-heading">Keep learning.<br /><span>Keep building.</span></h2>
+          <h2 id="course-heading">Ready to build?</h2>
           <p id="resume-context">Module 2 · Sensors and Movement</p>
           <div class="hero-action">
             <button class="button primary" id="resume-button">
@@ -184,9 +193,7 @@
             >
           </div>
         </div>
-        <div class="hero-art" role="img" aria-label="A learner building a blue wheeled robot">
-          <span class="image-caption"><span></span>A little curiosity goes a long way.</span>
-        </div>
+        <div class="hero-art visual-course-art"><img src="Assets/learner/rocket.svg" alt="" /></div>
       </section>
 
       <section class="learning-summary" aria-label="Your learning progress">
@@ -196,7 +203,7 @@
           ></span>
           <div>
             <strong><span data-modules-done>1</span><span class="total"> / 6</span></strong
-            ><span>Modules completed</span>
+            ><span>Modules done</span>
           </div>
         </div>
         <div class="summary-item">
@@ -205,7 +212,7 @@
           ></span>
           <div>
             <strong><span data-lessons-done>12</span><span class="total"> / 32</span></strong
-            ><span>Lessons completed</span>
+            ><span>Lessons done</span>
           </div>
         </div>
         <div class="summary-item">
@@ -214,11 +221,11 @@
           ></span>
           <div>
             <strong><span data-quizzes-done>4</span><span class="total"> / 10</span></strong
-            ><span>Quizzes completed</span>
+            ><span>Quizzes done</span>
           </div>
         </div>
         <div class="summary-progress">
-          <div><span>Overall progress</span><strong data-progress>38%</strong></div>
+          <div><span>Progress</span><strong data-progress>38%</strong></div>
           <div
             class="progress-track"
             role="progressbar"
@@ -229,7 +236,7 @@
           >
             <span class="progress-fill" data-progress-fill style="width: 37.5%"></span>
           </div>
-          <small>Every lesson is a step forward.</small>
+          <small></small>
         </div>
       </section>
 
@@ -243,7 +250,7 @@
               aria-controls="panel-modules"
               tabindex="0"
             >
-              <svg class="icon"><use href="#i-book" /></svg>Course modules
+              <svg class="icon"><use href="#i-book" /></svg>Modules
             </button>
             <button
               id="tab-completed"
@@ -267,16 +274,13 @@
           <div id="panel-modules" class="tab-panel" role="tabpanel" aria-labelledby="tab-modules">
             <div class="section-heading">
               <div>
-                <h2>Your course roadmap</h2>
-                <p>Build your skills, one module at a time.</p>
+                <h2>Choose a module</h2>
+                <p></p>
               </div>
               <span class="course-meta">6 modules · 32 lessons</span>
             </div>
             <div id="module-list" class="module-list"></div>
-            <p class="course-note">
-              <svg class="icon"><use href="#i-robot" /></svg>Learn it here. Bring it to life at your
-              club.
-            </p>
+            
           </div>
           <div
             id="panel-completed"
@@ -287,8 +291,8 @@
           >
             <div class="section-heading">
               <div>
-                <h2>Look how far you’ve come</h2>
-                <p>Revisit any lesson you’ve completed.</p>
+                <h2>Done!</h2>
+                <p>Tap to revisit.</p>
               </div>
               <span class="soft-badge green"
                 ><svg class="icon"><use href="#i-check" /></svg
@@ -306,8 +310,8 @@
           >
             <div class="section-heading">
               <div>
-                <h2>Your learning toolkit</h2>
-                <p>Helpful guides, pictures and animations.</p>
+                <h2>Your toolkit</h2>
+                <p>Tap to open.</p>
               </div>
               <span class="soft-badge blue"
                 ><svg class="icon"><use href="#i-eye" /></svg>View only</span
@@ -315,28 +319,27 @@
             </div>
             <div id="resource-list" class="resource-list"></div>
             <p class="resource-note">
-              Open resources here while you learn. No download option is provided.
+              View here.
             </p>
           </div>
           <noscript
             ><p class="no-script">
-              Enable JavaScript to open the course modules, lessons and resources in this
-              interactive preview.
+              Enable JavaScript to open your modules, lessons and resources.
             </p></noscript
           >
         </section>
 
-        <aside class="learning-aside" aria-label="Club sessions and progress">
+        <details class="visual-details learning-extras"><summary>My class &amp; milestones</summary><aside class="learning-aside" aria-label="Club sessions and progress">
           <section class="session-card" id="club-schedule" aria-labelledby="session-heading">
             <div class="aside-heading">
-              <h2 id="session-heading">Next club session</h2>
+              <h2 id="session-heading">Next class</h2>
               <span class="live-dot" aria-hidden="true"></span>
             </div>
             <div class="next-session">
               <div class="date-block"><span>OCT</span><strong>02</strong><small>FRIDAY</small></div>
               <div>
                 <span class="session-type">IN PERSON</span>
-                <h3>Let’s build together</h3>
+                <h3>Club time</h3>
                 <p>Robotics class</p>
               </div>
             </div>
@@ -352,9 +355,9 @@
               Bring your curiosity. We’ll put your new skills into practice.
             </p>
             <a class="button session-button" id="schedule-button" href="schedule.html"
-              >View club schedule<svg class="icon"><use href="#i-arrow" /></svg
+              >Schedule<svg class="icon"><use href="#i-arrow" /></svg
             ></a>
-            <p class="managed-note">Scheduled by your Mompreneur</p>
+            <p class="managed-note"></p>
           </section>
 
           <section class="milestone-card" aria-labelledby="milestone-heading">
@@ -362,11 +365,11 @@
               ><svg class="icon"><use href="#i-check" /></svg
             ></span>
             <div>
-              <span class="eyebrow">YOUR LATEST MILESTONE</span>
+              <span class="eyebrow">MILESTONE</span>
               <h2 id="milestone-heading">First module. Done!</h2>
               <p>Introduction to Robotics is complete. Keep that curiosity going.</p>
               <button class="text-button" id="review-completed">
-                See completed lessons<svg class="icon"><use href="#i-arrow" /></svg>
+                View completed<svg class="icon"><use href="#i-arrow" /></svg>
               </button>
             </div>
           </section>
@@ -374,19 +377,19 @@
           <section class="help-card">
             <svg class="icon"><use href="#i-help" /></svg>
             <div>
-              <h2>A little help?</h2>
-              <p>Your Mompreneur can help with lessons, class times and your login.</p>
-              <a href="contact.html"
-                >Contact KIA support<svg class="icon"><use href="#i-arrow" /></svg
+              <h2>Need help?</h2>
+              <p>Ask your Mompreneur.</p>
+              <a href="signup.html#contact"
+                >Contact KIA<svg class="icon"><use href="#i-arrow" /></svg
               ></a>
             </div>
           </section>
-        </aside>
+        </aside></details>
       </div>
       <footer class="page-footer">
         <span
           >Kids Innovate Africa <span class="footer-separator">/</span> Build. Code. Create.</span
-        ><span>Design preview · Sample content</span>
+        >
       </footer>
     </main>
     <dialog id="learning-dialog" aria-labelledby="dialog-title">
@@ -395,7 +398,7 @@
           <p id="dialog-eyebrow" class="eyebrow"></p>
           <h2 id="dialog-title"></h2>
         </div>
-        <button class="icon-button dialog-close" aria-label="Close preview">
+        <button class="icon-button dialog-close" aria-label="Close">
           <svg class="icon"><use href="#i-close" /></svg>
         </button>
       </div>

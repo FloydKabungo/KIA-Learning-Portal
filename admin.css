@@ -1552,33 +1552,6 @@ dialog::backdrop {
     sans-serif;
   color: #446582;
 }
-.certificate-preview {
-  border: 5px double #d5b252;
-  padding: 35px 22px;
-  text-align: center;
-  background: #fffcf3;
-}
-.certificate-preview .brand {
-  justify-content: center;
-  margin-bottom: 25px;
-}
-.certificate-preview h3 {
-  font-size: 26px;
-  margin: 16px 0;
-}
-.certificate-preview h4 {
-  font-size: 22px;
-  color: var(--blue);
-  margin: 17px 0;
-}
-.certificate-preview p {
-  font-size: 11px;
-  margin: 8px 0;
-}
-.certificate-preview small {
-  font-size: 9px;
-  color: var(--muted);
-}
 .toast {
   position: fixed;
   bottom: 24px;
@@ -2377,11 +2350,7 @@ dialog::backdrop {
   #dialog-body {
     padding: 0;
   }
-  .certificate-preview {
-    min-height: 650px;
-    padding-top: 80px;
   }
-}
 
 @media (min-width: 761px) {
   .side-nav a {

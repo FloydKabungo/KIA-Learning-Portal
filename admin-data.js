@@ -99,7 +99,7 @@
             title: `${title}: introduction`,
             type: 'Text',
             duration: 10,
-            body: 'Sample lesson outline. Add the approved KIA learning content here.',
+            body: 'Lesson content will appear here.',
           },
           {
             id: `${prefix}-m${i + 1}-l2`,
@@ -210,7 +210,7 @@
           courseId: 'robotics',
           type: 'Text',
           source: 'text',
-          body: 'Get to know your robotics kit.\n\nIdentify the controller, motors and sensors before you begin. Follow your Mompreneur’s instructions and keep your workspace clear.\n\nThis is sample content for the design preview.',
+          body: 'Get to know your robotics kit.\n\nIdentify the controller, motors and sensors before you begin. Follow your Mompreneur’s instructions and keep your workspace clear.',
           createdAt: '2026-09-28T10:00:00Z',
         },
         {
@@ -228,7 +228,7 @@
           courseId: 'onboarding',
           type: 'Text',
           source: 'text',
-          body: 'Sample facilitation resource\n\nPrepare your classroom, check your robotics materials and review the lesson plan before learners arrive.',
+          body: 'Facilitation guide\n\nPrepare your classroom, check your robotics materials and review the lesson plan before learners arrive.',
           createdAt: '2026-09-27T10:00:00Z',
         },
       ],
@@ -309,7 +309,6 @@
     if (state.schema >= 2) return upgradeFeatures(state);
     state.schema = 2;
     state.invitations = state.invitations || [];
-    state.identities = state.identities || [];
     state.users.forEach((u, index) => {
       u.accessStatus = u.accessStatus || 'active';
       if (u.role === 'admin') {
@@ -320,8 +319,7 @@
       u.gender = u.gender || 'Prefer not to say';
       u.homeAddress =
         u.homeAddress ||
-        'Sample address — ' +
-          (state.branches.find((b) => b.id === u.branchId)?.name || 'Cape Town');
+        'Address not provided';
       if (u.role === 'learner')
         u.guardian = u.guardian || {
           name: index === 0 ? 'Morgan Example' : `Guardian ${u.name.split(' ')[0]}`,
@@ -337,46 +335,14 @@
     return upgradeFeatures(state);
   }
   function upgradeFeatures(state) {
-    if (!state.groups)
-      state.groups = [
-        {
-          id: 'group-friday',
-          name: 'Friday Builders',
-          branchId: 'parklands',
-          description: 'The Friday Robotics class at Parklands.',
-          memberIds: ['learner-1', 'learner-2', 'learner-3', 'learner-4'],
-          courseIds: ['robotics'],
-          autoEnroll: true,
-          createdBy: 'mom-1',
-        },
-        {
-          id: 'group-saturday',
-          name: 'Saturday Explorers',
-          branchId: 'table-view',
-          description: 'The Saturday Robotics class at Table View.',
-          memberIds: ['learner-5', 'learner-6', 'learner-7', 'learner-8'],
-          courseIds: ['robotics'],
-          autoEnroll: true,
-          createdBy: 'mom-2',
-        },
-      ].filter((g) => state.branches.some((b) => b.id === g.branchId));
+    delete state.groups; // Remove the retired feature from old design samples.
+    state.activity = state.activity.filter(a => a.route !== 'groups');
     state.announcements = state.announcements || [];
     state.announcementReads = state.announcementReads || {};
     state.courses.forEach((c) => {
       if (!c.lessonOrder) c.lessonOrder = 'free';
     });
     if (state.schema < 4) {
-      state.identities = state.identities.flatMap((i) =>
-        i.userId
-          ? [i]
-          : state.users
-              .filter(
-                (u) =>
-                  u.role === i.role &&
-                  (u.role === 'learner' ? u.guardian?.email : u.email)?.toLowerCase() === i.email
-              )
-              .map((u) => ({ ...i, userId: u.id }))
-      );
       state.learningProgress = state.learningProgress || {};
       state.courses.forEach((c) =>
         c.modules.forEach((m, mi) => {
@@ -435,10 +401,10 @@
   }
   function database() {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open('kia-admin-preview-assets', 1);
+      const request = indexedDB.open('kia-design-v2-assets', 1);
       request.onupgradeneeded = () => request.result.createObjectStore('files');
       request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(new Error('This browser could not save the preview file.'));
+      request.onerror = () => reject(new Error('This browser could not save the file.'));
     });
   }
   // Uploaded bytes are encrypted with a key kept only in this preview tab.
@@ -482,35 +448,35 @@
       };
       tx.onerror = () => {
         db.close();
-        reject(new Error('The preview file could not be saved. Try a smaller file.'));
+        reject(new Error('The file could not be saved. Try a smaller file.'));
       };
     });
   }
   async function putFile(assetId, file) {
-    if (window.KIAAccounts.current()?.role !== 'admin')
+    if (window.KIAPreview.current()?.role !== 'admin')
       throw new Error('Only KIA Admin can upload learning content.');
-    const nonce = window.KIAAccounts.currentSession()?.nonce;
+    const nonce = window.KIAPreview.pageState()?.nonce;
     const encrypted = await encryptFile(file);
     if (
-      window.KIAAccounts.current()?.role !== 'admin' ||
-      window.KIAAccounts.currentSession()?.nonce !== nonce
+      window.KIAPreview.current()?.role !== 'admin' ||
+      window.KIAPreview.pageState()?.nonce !== nonce
     )
-      throw new Error('Log in again before uploading content.');
+      throw new Error('Reopen the page before uploading a file.');
     await rawPut(assetId, encrypted);
   }
   async function getFile(assetId) {
-    const actor = window.KIAAccounts.current(),
+    const actor = window.KIAPreview.current(),
       item = read().content.find((r) => r.id === assetId),
-      nonce = window.KIAAccounts.currentSession()?.nonce;
+      nonce = window.KIAPreview.pageState()?.nonce;
     const checkAccess = () => {
-      const live = window.KIAAccounts.current();
+      const live = window.KIAPreview.current();
       if (
         !live ||
         live.id !== actor?.id ||
-        window.KIAAccounts.currentSession()?.nonce !== nonce ||
+        window.KIAPreview.pageState()?.nonce !== nonce ||
         (live.role !== 'admin' && !window.KIALearning.unlocked(live, item?.courseId))
       )
-        throw new Error('Log in again before opening this resource.');
+        throw new Error('Reopen the page before opening this resource.');
     };
     if (
       !actor ||
@@ -527,7 +493,7 @@
       };
       request.onerror = () => {
         db.close();
-        reject(new Error('The preview file could not be opened.'));
+        reject(new Error('The file could not be opened.'));
       };
     });
     checkAccess();
@@ -549,7 +515,7 @@
       return new Blob([bytes], { type: item.mime || 'application/octet-stream' });
     } catch {
       throw new Error(
-        'This file belongs to a different preview session. Ask KIA to upload it again in this tab.'
+        'This file is no longer available. Ask KIA to upload it again.'
       );
     }
   }
@@ -566,15 +532,15 @@
       };
       tx.onerror = () => {
         db.close();
-        reject(new Error('Preview files could not be checked.'));
+        reject(new Error('Files could not be checked.'));
       };
     });
     for (const record of records)
       if (record.value instanceof Blob) await rawPut(record.id, await encryptFile(record.value));
   }
   async function clearFiles() {
-    if (window.KIAAccounts.current()?.role !== 'admin')
-      throw new Error('KIA Admin clears preview files.');
+    if (window.KIAPreview.current()?.role !== 'admin')
+      throw new Error('Only KIA Admin can clear files.');
     const db = await database();
     return new Promise((resolve, reject) => {
       const tx = db.transaction('files', 'readwrite');
@@ -585,7 +551,7 @@
       };
       tx.onerror = () => {
         db.close();
-        reject(new Error('Unable to clear uploaded preview files.'));
+        reject(new Error('Unable to clear uploaded files.'));
       };
     });
   }

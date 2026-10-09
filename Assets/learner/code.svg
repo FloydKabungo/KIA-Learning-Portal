@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" fill="none">
+<defs>
+ <linearGradient id="blue" x1="100" y1="50" x2="310" y2="280" gradientUnits="userSpaceOnUse"><stop stop-color="#57b7ec"/><stop offset="1" stop-color="#0765ab"/></linearGradient>
+ <linearGradient id="gold" x1="140" y1="40" x2="300" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#ffe69a"/><stop offset=".6" stop-color="#f7c844"/><stop offset="1" stop-color="#dc8b21"/></linearGradient>
+ <linearGradient id="white" x1="150" y1="80" x2="280" y2="270" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#d5e5ef"/></linearGradient>
+ <linearGradient id="dark" x1="100" y1="90" x2="300" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#294a67"/><stop offset="1" stop-color="#123047"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#204462" flood-opacity=".13"/></filter>
+</defs>
+<ellipse cx="240" cy="154" rx="165" ry="135" fill="#e9edf8"/>
+<ellipse cx="239" cy="281" rx="126" ry="15" fill="#204b69" opacity=".09"/>
+<g filter="url(#shadow)"><rect x="98" y="57" width="271" height="175" rx="18" fill="url(#dark)"/><rect x="112" y="71" width="243" height="146" rx="9" fill="#f1f7fa"/><path d="M112 95h243" stroke="#d5e4ed" stroke-width="3"/><circle cx="126" cy="83" r="3" fill="#e9ac45"/><circle cx="139" cy="83" r="3" fill="#66bdaa"/>
+<rect x="131" y="112" width="32" height="88" rx="7" fill="#dfe9ee"/><path d="M141 128h12m-12 15h12m-12 15h12" stroke="#8daab8" stroke-width="4"/>
+<path d="M181 110h91v24h-13l-5 6h-16l-5-6h-52Z" fill="#318ecb"/><path d="M196 143h121v24h-13l-5 6h-16l-5-6h-82Z" fill="#efb744"/><path d="M196 177h81v24h-13l-5 6h-16l-5-6h-42Z" fill="#55b39c"/>
+<path d="M197 122h45m-29 33h70m-70 34h37" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+<path d="M99 232h270l33 29H67Z" fill="#90b6cb"/><path d="M67 261h335v8H67Z" fill="#48799c"/><path d="m207 239-8 13h71l-8-13" fill="#d9e8f0"/></g>
+<g transform="translate(356 169)"><rect x="-7" y="15" width="69" height="53" rx="18" fill="url(#gold)"/><rect x="4" y="26" width="48" height="24" rx="10" fill="#203f55"/><circle cx="17" cy="38" r="4" fill="#fff"/><circle cx="39" cy="38" r="4" fill="#fff"/><path d="M26 15V2" stroke="#355775" stroke-width="5"/><circle cx="26" cy="0" r="5" fill="#e79833"/></g>
+</svg>

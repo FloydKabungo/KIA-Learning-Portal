@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" fill="none">
+<defs>
+ <linearGradient id="blue" x1="100" y1="50" x2="310" y2="280" gradientUnits="userSpaceOnUse"><stop stop-color="#57b7ec"/><stop offset="1" stop-color="#0765ab"/></linearGradient>
+ <linearGradient id="gold" x1="140" y1="40" x2="300" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#ffe69a"/><stop offset=".6" stop-color="#f7c844"/><stop offset="1" stop-color="#dc8b21"/></linearGradient>
+ <linearGradient id="white" x1="150" y1="80" x2="280" y2="270" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#d5e5ef"/></linearGradient>
+ <linearGradient id="dark" x1="100" y1="90" x2="300" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#294a67"/><stop offset="1" stop-color="#123047"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#204462" flood-opacity=".13"/></filter>
+</defs>
+<ellipse cx="240" cy="154" rx="165" ry="135" fill="#e2eff9"/>
+<ellipse cx="239" cy="281" rx="126" ry="15" fill="#204b69" opacity=".09"/>
+<g filter="url(#shadow)"><path d="M135 56h206q18 0 18 18v189H117V74q0-18 18-18" fill="#87b4cf"/><rect x="105" y="48" width="239" height="208" rx="20" fill="url(#white)"/><path d="M105 68q0-20 20-20h199q20 0 20 20v40H105Z" fill="url(#blue)"/>
+<path d="M159 32v37m132-37v37" stroke="#426581" stroke-width="12" stroke-linecap="round"/>
+<g fill="#d5e5ed"><rect x="127" y="130" width="35" height="27" rx="6"/><rect x="181" y="130" width="35" height="27" rx="6"/><rect x="235" y="130" width="35" height="27" rx="6"/><rect x="289" y="130" width="35" height="27" rx="6"/><rect x="127" y="178" width="35" height="27" rx="6"/><rect x="181" y="178" width="35" height="27" rx="6"/><rect x="289" y="178" width="35" height="27" rx="6"/></g>
+<rect x="230" y="172" width="45" height="41" rx="10" fill="url(#gold)"/><path d="m239 191 9 9 18-22" stroke="#765112" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="343" cy="236" r="43" fill="#efb84b"/><circle cx="343" cy="236" r="32" fill="#fff7dd"/><path d="M343 214v23l15 8" stroke="#435e71" stroke-width="6" stroke-linecap="round"/></g>
+</svg>
